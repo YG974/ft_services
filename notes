@@ -1,0 +1,17 @@
+watch HELM doc
+
+SETUP.SH
+check if minikube Docker and kubectl and installed and launched
+
+NGINX
+ssl and ssh in nginx
+write html index and landing page
+write nginx.conf
+ingress
+find the way to expose my node/pod
+yaml Files
+
+WORDPRESS
+launch DB
+link with phpmyadmin
+

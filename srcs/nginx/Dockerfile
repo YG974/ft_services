@@ -1,6 +1,8 @@
 FROM alpine:3
 
-WORKDIR	./
+#WORKDIR	./
+
+COPY entrypoint.sh .vimrc ./
 
 RUN apk add \
 			nginx	\
@@ -12,7 +14,7 @@ RUN apk add \
 RUN mkdir -p /run/nginx
 
 # Copy vimrc to be confortable when connecting with tty
-RUN cp ./.vimrc ./root/
+RUN cp .vimrc ./root/
 
 EXPOSE	80 443
 
@@ -20,4 +22,4 @@ EXPOSE	80 443
 RUN		chmod +x ./entrypoint.sh
 
 #starting NGINX
-ENTRYPOINT ["sh", "-c", "./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]

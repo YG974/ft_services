@@ -1,13 +1,13 @@
 # template from kube documentation :
 # https://kubernetes.io/fr/docs/concepts/workloads/controllers/deployment/
-apiVersion: apps/v1
+apiVersion: v1
 kind: Deployment
 metadata:
   name: nginx-deployment
   labels:
     app: nginx
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: nginx
@@ -18,42 +18,40 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:1.7.9
+        imagePullPolicy: Never
+        image: ygeslin-nginx:latest
         ports:
         - containerPort: 80
         
 # template from kube documentation :
-# https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/
-          apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hello-world
-spec:
-  selector:
-    matchLabels:
-      run: load-balancer-example
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        run: load-balancer-example
-    spec:
-      containers:
-        - name: hello-world
-          image: gcr.io/google-samples/node-hello:1.0
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-              apiVersion: v1
-              
-#template from :
-#https://kubernetes.io/fr/docs/concepts/services-networking/service/https://kubernetes.io/fr/docs/
+# https://kubernetes.io/fr/docs/concepts/services-networking/service
+apiVersion: v1
 kind: Service
 metadata:
   name: my-service
 spec:
   selector:
-    app: MyApp
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9376
+  clusterIP: 10.0.171.239
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.0.2.127
+              
+#template from :
+#https://kubernetes.io/fr/docs/concepts/services-networking/service/https://kubernetes.io/fr/docs/
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
   ports:
     - name: http
       protocol: TCP

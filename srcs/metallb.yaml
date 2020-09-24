@@ -1,3 +1,12 @@
+# https://github.com/metallb/metallb/blob/main/manifests/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metallb-system
+  labels:
+    app: metallb
+---
+# https://github.com/metallb/metallb/blob/main/manifests/metallb.yaml
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -6,7 +15,7 @@ metadata:
   name: controller
   namespace: metallb-system
 spec:
-  allowPrivilegeEscalation: false
+  #allo20rivilegeEscalation20false
   allowedCapabilities: []
   allowedHostPaths: []
   defaultAddCapabilities: []

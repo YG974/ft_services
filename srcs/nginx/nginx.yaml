@@ -1,6 +1,29 @@
+#template from :
+#https://kubernetes.io/fr/docs/concepts/services-networking/service/https://kubernetes.io/fr/docs/
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  annotations:
+    metallb.universe.tf/address-pool: default
+    metallb.universe.tf/allow-shared-ip: shared
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      port: 80
+    - name: https
+      port: 443
+    - name: ssh
+      port: 22
+
+   
+
 # template from kube documentation :
 # https://kubernetes.io/fr/docs/concepts/workloads/controllers/deployment/
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
@@ -18,46 +41,9 @@ spec:
     spec:
       containers:
       - name: nginx
+        image: ygeslin-nginx
         imagePullPolicy: Never
-        image: ygeslin-nginx:latest
         ports:
         - containerPort: 80
-        
-# template from kube documentation :
-# https://kubernetes.io/fr/docs/concepts/services-networking/service
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-service
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9376
-  clusterIP: 10.0.171.239
-  type: LoadBalancer
-status:
-  loadBalancer:
-    ingress:
-    - ip: 192.0.2.127
-              
-#template from :
-#https://kubernetes.io/fr/docs/concepts/services-networking/service/https://kubernetes.io/fr/docs/
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  ports:
-    - name: http
-      protocol: TCP
-      port: 80
-      targetPort: 9376
-    - name: https
-      protocol: TCP
-      port: 443
-      targetPort: 9377
+        - containerPort: 443
+        - containerPort: 22

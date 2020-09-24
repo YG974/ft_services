@@ -1,30 +1,9 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-  annotations:
-    #metallb.universe.tf/address-pool: default
-    #metallb.universe.tf/allow-shared-ip: shared
-spec:
-  type: LoadBalancer
-  selector:
-    app: nginx
-  ports:
-    - port: 80
-      name: http
-    - port: 443
-      name: https
-    - port: 22
-      name: ssh
-
----
+# https://github.com/metallb/metallb/blob/main/manifests/tutorial-2.yaml
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  labels:
-    app: nginx
 spec:
   selector:
     matchLabels:
@@ -38,4 +17,34 @@ spec:
       - name: nginx
         image: ygeslin-nginx
         imagePullPolicy: Never
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        - name: ssh
+          containerPort: 22
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  - name: ssh
+    port: 22
+    protocol: TCP
+    targetPort: 22
+  selector:
+    app: nginx
+  type: LoadBalancer
 

@@ -17,14 +17,19 @@ metallb_version="v0.9.3"
 
 #--------------------------- Building contenairs ------------------------------#
 
-#minikube start
+# cif minikube is no running, start minikube
+if ! minikube status > /dev/null 2>&1
+	then
+		minikube start
+		minikube addons enable metallb
+		minikube addons enable metrics-server
+		minikube addons enable dashboard
+fi
+
 # add minikube env variables
 echo "adding minikube docker env\n"
 eval $(minikube -p minikube docker-env)
 #minikube addons configure metallb eval $(minikube docker-env)
-minikube addons enable metallb
-minikube addons enable metrics-server
-minikube addons enable dashboard
 
 # How to install metallb => https://metallb.universe.tf/installation/
 # enable strict ARP mode to use kube-proxy
@@ -49,7 +54,6 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 #for service in services "${services[@]}"
 docker build -t "$USER-nginx" -f "$srcs/nginx/Dockerfile" srcs/nginx/.
 #kubectl apply -f srcs/nginx/nginx.yaml
-kubectl apply -f srcs/nginx/nginx-test.yaml
-minikube service nginx
-
-
+kubectl apply -f srcs/nginx/nginx.yaml
+#kubectl proxy &
+#minikube service nginx &

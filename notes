@@ -31,3 +31,7 @@ INFLUXDB
 endpoint :
 The term has its origin in reference to computer networks. The endpoint is a device or node that is connected to the LAN or WAN and accepts communications back and forth across the network. In a traditional sense, an endpoint can be a modem, hub, bridge, or switch. It also could be data terminal equipment (such as a digital telephone handset, router, or printer) or a host computer (such as a workstation or a server).
 
+question Maincourt :
+- METALLB c'est un layer ?
+- est-ce que ca veut dire quelquechose son propre nginx ? un nginx par service
+  ou un seul au global ?

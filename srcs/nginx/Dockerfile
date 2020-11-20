@@ -22,14 +22,16 @@ RUN mkdir -p /run/nginx
 #COPY --chown=$USER entrypoint.sh \
 COPY  entrypoint.sh \
 			.vimrc \
+			localhost.conf \
+			index.html \
 			./
 
 # Copy vimrc to be confortable when connecting with tty
 RUN mv .vimrc ./root/
-RUN mv localhost.conf /etc/nginx/conf.d/
+RUN mv localhost.conf /etc/nginx/conf.d
 RUN mv index.html /var/www/localhost/
 
-EXPOSE	80 443 22
+EXPOSE	80 443
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh

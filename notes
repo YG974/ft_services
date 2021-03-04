@@ -95,3 +95,9 @@ question Maincourt :
 - METALLB c'est un layer ?
 - est-ce que ca veut dire quelquechose son propre nginx ? un nginx par service
   ou un seul au global ?
+
+
+DOCKER:
+docker build -f /path/to/a/Dockerfile .
+docker build -t shykes/myapp .
+docker build -t shykes/myapp:1.0.2 -t shykes/myapp:latest .

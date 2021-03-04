@@ -4,17 +4,20 @@ SETUP.SH
 check if minikube Docker and kubectl and installed and launched
 
 NGINX
-normalement ssl ookay
-ssl and ssh in nginx
-write html index and landing page
-write nginx.conf
-ingress
-find the way to expose my node/pod
-yaml Files
+- ssl in nginx
+- write html index and landing page
+- write nginx.conf
+- ingress
+- find the way to expose my node/pod
+- yaml Files
+- return 80 to 443
+- return 307 
+- proxy
+- reverse proxy
 
 WORDPRESS
-launch DB
-link with phpmyadmin
+- launch DB
+- link with phpmyadmin
 
 MYSQL
 

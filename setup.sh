@@ -52,8 +52,8 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 
 
 #for service in services "${services[@]}"
-docker build -t "$USER-nginx" -f "$srcs/nginx/Dockerfile" srcs/nginx/.
+docker build -t "$USER-nginx" -f "$srcs/nginx/Dockerfile" srcs/nginx
 #kubectl apply -f srcs/nginx/nginx.yaml
 kubectl apply -f srcs/nginx/nginx.yaml
-#kubectl proxy &
-#minikube service nginx &
+
+

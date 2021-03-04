@@ -4,6 +4,7 @@ SETUP.SH
 check if minikube Docker and kubectl and installed and launched
 
 NGINX
+normalement ssl ookay
 ssl and ssh in nginx
 write html index and landing page
 write nginx.conf

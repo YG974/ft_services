@@ -20,7 +20,7 @@ metallb_version="v0.9.3"
 # cif minikube is no running, start minikube
 if ! minikube status > /dev/null 2>&1
 	then
-		minikube start
+		minikube start --driver=docker --cpus=2
 		minikube addons enable metallb
 		minikube addons enable metrics-server
 		minikube addons enable dashboard

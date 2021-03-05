@@ -101,3 +101,17 @@ DOCKER:
 docker build -f /path/to/a/Dockerfile .
 docker build -t shykes/myapp .
 docker build -t shykes/myapp:1.0.2 -t shykes/myapp:latest .
+
+directive : In computer programming, a directive or pragma (from "pragmatic") is a language construct that specifies how a compiler (or other translator) should process its input. Directives are not part of the grammar of a programming language, and may vary from compiler to compiler. They can be processed by a preprocessor to specify compiler behavior, or function as a form of in-band parameterization.
+
+Understand how CMD and ENTRYPOINT interact
+Both CMD and ENTRYPOINT instructions define what command gets executed when running a container. There are few rules that describe their co-operation.
+
+Dockerfile should specify at least one of CMD or ENTRYPOINT commands.
+
+ENTRYPOINT should be defined when using the container as an executable.
+
+CMD should be used as a way of defining default arguments for an ENTRYPOINT command or for executing an ad-hoc command in a container.
+
+CMD will be overridden when running the container with alternative arguments.
+apt-get install -y foo // to upgradee the last version of foo

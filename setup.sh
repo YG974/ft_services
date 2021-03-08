@@ -13,13 +13,20 @@ services=(				\
 srcs=./srcs
 
 metallb_version="v0.9.3"
+minikube_version="v1.9.0"
 
 # check the version of minikube
 # if version 1.9 is installed, go to next step
 # if version 1.9 is not installed, remove the existing version, and install 1.9
+
+function launch_minikube ()
+{
+	echo "launch Minikube\n";
+}
+
 function check_minikube ()
 {
-	minikube version | grep "1.9"
+	minikube version | grep "$minikube_version"
 	if [ "$?" == 0 ]
 	then
 		echo good version
@@ -27,13 +34,12 @@ function check_minikube ()
 		echo bad
 		#sudo apt install minikube=1.9.0
 	fi
-	#exit;
-
 }
 
 function main ()
 {
 	check_minikube;
+	launch_minikube;
 	echo start
 }
 
@@ -44,7 +50,12 @@ echo "-----------------------------------------------------------------------\n"
 echo "WARNING : you need to run this project on 42VM AND :\n"
 echo "-Your VM need at least 2 CPU's to run Minikube\n"
 echo "-Your VM need to give sudo rights to Docker to run it properly\n"
-echo "if you don't fullfil theses 2 requierements, select no, apply the requierements, and then relaunch setup.sh\n"
+echo "if you don't fullfil theses 2 requierements :"
+echo "1- Select \"No\""
+echo "2- Give sudo rights to Docker: sudo usermod -aG docker \$(whoami)"
+echo "3- Exit the VM"
+echo "4- Set 2 CPU for the VM"
+echo "5- Restart the VM to apply changes and then relaunch setup.sh\n"
 echo "-----------------------------------------------------------------------\n"
 echo "Do you fulfil theses requierments ?\n"
 select yn in "Yes" "No"; do
@@ -56,7 +67,7 @@ done
 
 
 #--------------------------- Building contenairs ------------------------------#
-# cif minikube is no running, start minikube
+# if minikube is no running, start minikube
 #if ! minikube status > /dev/null 2>&1
 	#then
 		#minikube start --driver=docker --cpus=2

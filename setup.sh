@@ -1,3 +1,5 @@
+#! /bin/bash
+
 #--------------------------- Variables ----------------------------------------#
 
 services=(				\
@@ -15,14 +17,23 @@ srcs=./srcs
 metallb_version="v0.9.3"
 minikube_version="v1.9.0"
 
-# check the version of minikube
-# if version 1.9 is installed, go to next step
-# if version 1.9 is not installed, remove the existing version, and install 1.9
-
 function launch_minikube ()
 {
 	echo "launch Minikube\n";
+# deleting previous clusters
+minikube delete > /dev/null 2>&1
+minikube start --driver=docker --cpus=2
+#minikube addons enable metallb
+minikube addons enable metrics-server
+minikube addons enable dashboard
+## add minikube env variables
+echo "adding minikube docker env\n"
+eval $(minikube -p minikube docker-env)
 }
+
+# check the version of minikube
+# if version 1.9 is installed, go to next step
+# if version 1.9 is not installed, remove the existing version, and install 1.9
 
 function check_minikube ()
 {

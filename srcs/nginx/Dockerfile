@@ -34,7 +34,8 @@ EXPOSE	80 443
 RUN		chmod +x ./entrypoint.sh
 
 #starting NGINX
-CMD		["sh", "./entrypoint.sh"]
+#CMD		["sh", "./entrypoint.sh"]
+CMD		["./entrypoint.sh"]
 #ENTRYPOINT ["sh"]
 #ENTRYPOINT ["sh", "./entrypoint.sh"]
 #ENTRYPOINT ["./entrypoint.sh"]

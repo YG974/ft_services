@@ -35,7 +35,11 @@ run_nginx_tty: build_nginx
 build_wp:
 	docker build -t "${USER}-wp" -f "${srcs}/wordpress/Dockerfile" srcs/wordpress
 
-
 run_wp_tty: build_wp
 	docker run -p 5050:5050 -ti --rm ygeslin-wp:latest
 
+build_sql:
+	docker build -t "${USER}-sql" -f "${srcs}/mysql/Dockerfile" srcs/mysql
+
+run_sql_tty: build_sql
+	docker run -p 5050:5050 -ti --rm ygeslin-sql:latest

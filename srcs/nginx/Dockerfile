@@ -9,7 +9,7 @@ ARG		USER=nginx
 WORKDIR	./
 
 RUN		apk add --update --no-cache \
-		nginx=$NGINX_VERSION \
+		nginx=${NGINX_VERSION} \
 		openssh \
 		openssl
 

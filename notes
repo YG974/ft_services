@@ -115,3 +115,23 @@ CMD should be used as a way of defining default arguments for an ENTRYPOINT comm
 
 CMD will be overridden when running the container with alternative arguments.
 apt-get install -y foo // to upgradee the last version of foo
+
+
+ENV OS_IMAGE=alpine
+ENV NGINX_VERSION=xxxx
+ENV PMA_VERSION=xxxxx
+ENV WP_VERSION=xxxxxx
+ENV OPENRC_VERSION=xxxxx
+ENV CLUSTER_IP=xxxxx
+ENV DB_NAME=xxxx
+ENV WP_IP=xxxxx
+ENV PMA_IP=xxxx
+ENV NGINX_IP=xxxxxx
+ENV MARIADB_IP=xxxxxx
+
+setup_nginx.sh
+generate_ssh_nginx_keys.sh
+setup_openrc.sh
+setup_mariadb.sh
+start_services.sh
+livenessprob.sh

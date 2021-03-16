@@ -4,13 +4,21 @@
 
 services=(				\
 			nginx		\
+			wordpress	\
+			mysql		\
+			phpmyadmin	\
 			#ftps		\
-			#wordpress	\
-			#mysql		\
-			#phpmyadmin	\
 			#grafana	\
 			#influxdb	\
 )
+
+ALPINE_VERSION=3.11
+OPENRC_VERSION=0.42.1-r2
+NGINX_VERSION=1.16.1-r6
+MYSQL_VERSION=10.4.17-r1
+PMA_VERSION=4.9.5-r0
+WP_VERSION=5.7
+PHP_VERSION=7.3.22-r0
 
 srcs=./srcs
 
@@ -47,14 +55,28 @@ function check_minikube ()
 	fi
 }
 
+function build_containers ()
+{
+	for service in services "${services[@]}"
+	do
+		docker build -t ${USER}-${service[@]} -f ${srcs}/${service}/Dockerfile ${srcs}/${service}
+	done
+}
+
 function main ()
 {
-	check_minikube;
-	launch_minikube;
+	#check_minikube;
+	#launch_minikube;
+	build_containers;
 	echo start
 }
 
+main;
+
 #--------------------------- Checking dependences------------------------------#
+
+function VM_settings ()
+{
 echo "-----------------------------------------------------------------------\n"
 echo "			Welcome to Ft_Services\n"
 echo "-----------------------------------------------------------------------\n"
@@ -75,6 +97,7 @@ select yn in "Yes" "No"; do
         No ) exit;;
     esac
 done
+}
 
 
 #--------------------------- Building contenairs ------------------------------#

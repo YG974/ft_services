@@ -11,5 +11,5 @@ sed -i "s|.*skip-networking.*|skip-networking|g" /etc/my.cnf.d/mariadb-server.cn
 
 /etc/init.d/mariadb setup
 
-service mariadb start
+exec service mariadb start
 

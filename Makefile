@@ -42,4 +42,4 @@ build_sql:
 	docker build -t "${USER}-sql" -f "${srcs}/mysql/Dockerfile" srcs/mysql
 
 run_sql_tty: build_sql
-	docker run -p 5050:5050 -ti --rm ygeslin-sql:latest
+	docker run -p 3306:3306 -ti --rm ygeslin-sql:latest

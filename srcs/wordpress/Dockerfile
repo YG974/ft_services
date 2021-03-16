@@ -1,3 +1,5 @@
+# WORDPRESS
+
 ARG		ALPINE_VERSION=3.11
 FROM	alpine:$ALPINE_VERSION
 
@@ -5,13 +7,26 @@ LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
 ARG		WP_VERSION=5.7
 ARG		PHP_VERSION=7.3.22-r0
+ARG		NGINX_VERSION=1.16.1-r6
 
 WORKDIR	./
 
 RUN		apk add --update --no-cache \
+		nginx=${NGINX_VERSION} \
 		php7=${PHP_VERSION} \
 		php7-json=${PHP_VERSION} \
 		php7-mysqli=${PHP_VERSION}
+
+RUN		mkdir -p /run/nginx
+
+#COPY --chown=$USER entrypoint.sh \
+COPY	entrypoint.sh \
+		./
+
+#COPY 	localhost.conf \
+		#./
+#RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
+#RUN		rm /etc/nginx/conf.d/default.conf
 
 # Download wordpress
 ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .

@@ -1,10 +1,11 @@
+# NGINX
+
 ARG		ALPINE_VERSION=3.11
 FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
 ARG		NGINX_VERSION=1.16.1-r6
-ARG		USER=nginx
 
 WORKDIR	./
 
@@ -34,8 +35,4 @@ EXPOSE	80 443
 RUN		chmod +x ./entrypoint.sh
 
 #starting NGINX
-#CMD		["sh", "./entrypoint.sh"]
 CMD		["./entrypoint.sh"]
-#ENTRYPOINT ["sh"]
-#ENTRYPOINT ["sh", "./entrypoint.sh"]
-#ENTRYPOINT ["./entrypoint.sh"]

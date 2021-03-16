@@ -1,6 +1,6 @@
-# MYSQL
-
 #!/bin/ash
+
+# MYSQL
 
 openrc
 touch /run/openrc/softlevel
@@ -11,5 +11,8 @@ sed -i "s|.*skip-networking.*|skip-networking|g" /etc/my.cnf.d/mariadb-server.cn
 
 /etc/init.d/mariadb setup
 
-exec service mariadb start
+#nginx -g 'daemon off;'
+service nginx start
+service mariadb start
 
+tail -F /dev/null

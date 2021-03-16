@@ -59,8 +59,17 @@ function build_containers ()
 {
 	for service in services "${services[@]}"
 	do
-		docker build -t ${USER}-${service[@]} -f ${srcs}/${service}/Dockerfile ${srcs}/${service}
+		docker build -t ${USER}-${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
 	done
+}
+
+function run_containers ()
+{
+	docker run -p 80:80 -p 443:443 -d -t ygeslin-nginx:latest
+	docker run -p 5050:5050 -d -t  ygeslin-wordpress:latest
+	docker run -p 5000:5000 -d -t  ygeslin-phpmyadmin:latest
+	docker run -p 3306:3306 -d -t ygeslin-mysql:latest
+
 }
 
 function main ()
@@ -68,6 +77,7 @@ function main ()
 	#check_minikube;
 	#launch_minikube;
 	build_containers;
+	run_containers;
 	echo start
 }
 

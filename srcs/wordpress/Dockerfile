@@ -45,8 +45,5 @@ EXPOSE	5050
 RUN		chmod +x ./entrypoint.sh
 
 #starting NGINX
-#CMD		["sh", "./entrypoint.sh"]
-#CMD		["./entrypoint.sh"]
-ENTRYPOINT ["ash"]
-#ENTRYPOINT ["sh", "./entrypoint.sh"]
-#ENTRYPOINT ["./entrypoint.sh"]
+#ENTRYPOINT ["bin/ash"]
+CMD ["/bin/ash", "./entrypoint.sh"]

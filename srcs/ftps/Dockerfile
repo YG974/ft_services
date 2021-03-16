@@ -1,4 +1,7 @@
-FROM alpine:3
+# FTPS
+
+ARG		ALPINE_VERSION=3.11
+FROM	alpine:$ALPINE_VERSION
 
 #WORKDIR	./
 

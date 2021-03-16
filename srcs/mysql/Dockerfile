@@ -26,8 +26,6 @@ EXPOSE	3306
 RUN		chmod +x ./entrypoint.sh
 
 #starting NGINX
-#CMD		["./entrypoint.sh"]
-ENTRYPOINT ["ash"]
-#ENTRYPOINT ["sh", "./entrypoint.sh"]
-#ENTRYPOINT ["./entrypoint.sh"]
+CMD		["./entrypoint.sh"]
+#ENTRYPOINT ["ash"]
 # mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql

@@ -15,4 +15,6 @@ sed -i "s|.*skip-networking.*|skip-networking|g" /etc/my.cnf.d/mariadb-server.cn
 service nginx start
 service mariadb start
 
+mysql --user=root $WP_DB < create_db_and_users.sql
+
 tail -F /dev/null

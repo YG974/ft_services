@@ -72,12 +72,25 @@ function run_containers ()
 
 }
 
+apply_metal_LB ()
+{
+	kubectl apply -f "$srcs/config.yaml"
+	kubectl apply -f "$srcs/metallb.yaml"
+}
+
+apply_kub ()
+{
+
+}
+
 function main ()
 {
 	#check_minikube;
 	#launch_minikube;
 	build_containers;
-	run_containers;
+	# run_containers;
+	apply_metal_LB;
+	apply_kub;
 	echo start
 }
 

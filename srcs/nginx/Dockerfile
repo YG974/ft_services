@@ -17,6 +17,17 @@ RUN		apk add --update --no-cache \
 # creating required directory to run nginx
 RUN		mkdir -p /run/nginx
 
+
+# https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
+# ssl
+RUN openssl req -x509 \
+			-nodes \
+			-days 365 \
+			-newkey rsa:4096 \
+			-keyout /etc/ssl/private/nginx-selfsigned.key \
+			-out /etc/ssl/certs/nginx-selfsigned.crt \
+			-subj "/C=FR/ST=Paris/L=Paris/O=42_School/OU=ygeslin/CN=ft_services"
+
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
 		index.html \

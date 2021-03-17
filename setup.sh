@@ -59,16 +59,17 @@ function build_containers ()
 {
 	for service in services "${services[@]}"
 	do
+		echo "building ${services[@]}\n"
 		docker build -t ${USER}-${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
 	done
 }
 
 function run_containers ()
 {
-	docker run -p 80:80 -p 443:443 -d -t ygeslin-nginx:latest
-	docker run -p 5050:5050 -d -t  ygeslin-wordpress:latest
-	docker run -p 5000:5000 -d -t  ygeslin-phpmyadmin:latest
-	docker run -p 3306:3306 -d -t ygeslin-mysql:latest
+	docker run -p 80:80 -p 443:443 -d -t ${USER}-nginx:latest
+	docker run -p 5050:5050 -d -t  ${USER}-wordpress:latest
+	docker run -p 5000:5000 -d -t  ${USER}-phpmyadmin:latest
+	docker run -p 3306:3306 -d -t ${USER}-mysql:latest
 
 }
 
@@ -80,6 +81,7 @@ apply_metal_LB ()
 
 apply_kub ()
 {
+	kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
 
 }
 
@@ -88,13 +90,14 @@ function main ()
 	#check_minikube;
 	#launch_minikube;
 	build_containers;
-	# run_containers;
-	apply_metal_LB;
-	apply_kub;
+	 run_containers;
+	#apply_metal_LB;
+	#apply_kub;
 	echo start
 }
 
 main;
+exit;
 
 #--------------------------- Checking dependences------------------------------#
 

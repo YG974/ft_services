@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# METAL LB
+
 # ssl etc
 
 # standard command to start nginx with daemon off according to Nginx Docker doc :

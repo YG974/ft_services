@@ -29,6 +29,6 @@ GRANT ALL PRIVILEGES ON $WP_DB.* TO '$WP_ADMIN'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 EOF
 
-#mysql --user=root $WP_DB < create_db_and_users.sql
+mysql --user=root $WP_DB < wordpress_db.sql
 
 tail -F /dev/null

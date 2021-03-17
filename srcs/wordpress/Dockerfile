@@ -38,6 +38,11 @@ RUN		rm wordpress-${WP_VERSION}.tar.gz
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
 		./
+# NGINX
+COPY 	localhost.conf \
+		./
+RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
+RUN		rm /etc/nginx/conf.d/default.conf
 
 EXPOSE	5050
 

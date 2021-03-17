@@ -1,11 +1,12 @@
 # NGINX
 
-ARG		ALPINE_VERSION=3.11
+ARG		ALPINE_VERSION
 FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
-ARG		NGINX_VERSION=1.16.1-r6
+ARG		NGINX_VERSION
+#ENV		NGINX_VERSION=${NGINX_VERSION}
 
 WORKDIR	./
 
@@ -16,7 +17,6 @@ RUN		apk add --update --no-cache \
 
 # creating required directory to run nginx
 RUN		mkdir -p /run/nginx
-
 
 # https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
 # ssl

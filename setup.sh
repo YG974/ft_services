@@ -55,6 +55,47 @@ function check_minikube ()
 	fi
 }
 
+function build_nginx ()
+{
+	svc=nginx;
+		docker build -t ${USER}-${svc} \
+		--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+		--build-arg NGINX_VERSION=${NGINX_VERSION} \
+		-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
+function build_mysql ()
+{
+	svc=mysql;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg MYSQL_VERSION=${MYSQL_VERSION} \
+	--build-arg NGINX_VERSION=${NGINX_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
+function build_phpmyadmin ()
+{
+	svc=phpmyadmin;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg NGINX_VERSION=${NGINX_VERSION} \
+	--build-arg PMA_VERSION=${PMA_VERSION} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
+function build_wordpress ()
+{
+	svc=wordpress;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg NGINX_VERSION=${NGINX_VERSION} \
+	--build-arg WP_VERSION=${WP_VERSION} \
+	--build-arg PHP_VERSION=${PHP_VERSION} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
 function build_containers ()
 {
 	for service in services "${services[@]}"
@@ -66,11 +107,15 @@ function build_containers ()
 
 function run_containers ()
 {
-	docker run -p 80:80 -p 443:443 -d -t ${USER}-nginx:latest
-	docker run -p 5050:5050 -d -t  ${USER}-wordpress:latest
-	docker run -p 5000:5000 -d -t  ${USER}-phpmyadmin:latest
-	docker run -p 3306:3306 -d -t ${USER}-mysql:latest
-
+	docker network create cluster
+	docker run --network=cluster -p 3306:3306 -d -t ${USER}-mysql
+	#docker network connect --alias db --alias mysql cluster ${USER}-mysql:latest
+	docker run --network=cluster -p 80:80 -p 443:443 -d -t ${USER}-nginx
+	docker run --network=cluster -p 5050:5050 -d -t  ${USER}-wordpress
+	docker run --network=cluster -p 5000:5000 -d -t  ${USER}-phpmyadmin
+	#docker network connect cluster ${USER}-nginx:latest
+	#docker network connect cluster ${USER}-wordpress:latest
+	#docker network connect cluster ${USER}-phpmyadmin:latest
 }
 
 apply_metal_LB ()
@@ -89,8 +134,12 @@ function main ()
 {
 	#check_minikube;
 	#launch_minikube;
-	build_containers;
-	 run_containers;
+	#build_containers;
+	build_mysql;
+	build_nginx;
+	build_wordpress;
+	build_phpmyadmin;
+	run_containers;
 	#apply_metal_LB;
 	#apply_kub;
 	echo start

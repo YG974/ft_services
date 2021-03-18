@@ -77,6 +77,7 @@ function build_mysql ()
 
 function build_phpmyadmin ()
 {
+# sed -i "s/\$HOSTNAME/$HOSTNAME/g" /etc/phpmyadmin/config.inc.php
 	svc=phpmyadmin;
 	docker build -t ${USER}-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \

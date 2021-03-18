@@ -13,6 +13,9 @@ ARG		WP_VERSION
 ARG		PHP_VERSION
 ARG		NGINX_VERSION
 
+#ENV MYSQL_IP=${MYSQL_IP}
+ENV WP_CONF="/srv/wordpress/wp-config.php"
+
 WORKDIR	./
 
 RUN		apk add --update --no-cache \
@@ -38,6 +41,7 @@ ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .
 # Install wordpress and remove tar file
 RUN		tar xzf wordpress-${WP_VERSION}.tar.gz -C /srv/
 RUN		rm wordpress-${WP_VERSION}.tar.gz
+RUN		mv /srv/wordpress/wp-config-sample.php /srv/wordpress/wp-config.php
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \

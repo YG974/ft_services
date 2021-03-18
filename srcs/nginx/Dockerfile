@@ -10,6 +10,8 @@ ARG		NGINX_VERSION
 
 WORKDIR	./
 
+ENV MYSQL_IP=${MYSQL_IP}
+
 RUN		apk add --update --no-cache \
 		nginx=${NGINX_VERSION} \
 		openssh \

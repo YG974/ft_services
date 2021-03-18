@@ -12,6 +12,8 @@ LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 ARG		PMA_VERSION
 ARG		NGINX_VERSION
 
+ENV MYSQL_IP=${MYSQL_IP}
+
 WORKDIR	./
 
 RUN		apk add --update --no-cache \

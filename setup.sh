@@ -12,13 +12,42 @@ services=(				\
 			#influxdb	\
 )
 
-ALPINE_VERSION=3.11
-OPENRC_VERSION=0.42.1-r2
-NGINX_VERSION=1.16.1-r6
-MYSQL_VERSION=10.4.17-r1
-PMA_VERSION=4.9.5-r0
-WP_VERSION=5.7
-PHP_VERSION=7.3.22-r0
+# VERSION
+ALPINE_VERSION="3.11";
+OPENRC_VERSION="0.42.1-r2";
+NGINX_VERSION="1.16.1-r6";
+MYSQL_VERSION="10.4.17-r1";
+PMA_VERSION="4.9.5-r0";
+WP_VERSION="5.7";
+PHP_VERSION="7.3.22-r0";
+
+# NETWORK
+NETWORK_NAME="cluster";
+MYSQL_IP="172.18.0.2";
+WP_IP="172.18.0.3";
+PMA_IP="172.18.0.4";
+NGINX_IP="172.18.0.5";
+DOCKER_SUBNET="172.18.0.0/16";
+
+# DATABASE USERS INFO
+
+DB_NAME="wp_db";
+DB_USER="user";
+DB_PASS="user";
+WP_ADMIN="admin";
+WP_ADMIN_PASS="admin";
+
+#define( 'DB_NAME', 'database_name_here' );^M
+#^M
+#/** MySQL database username */^M
+#define( 'DB_USER', 'username_here' );^M
+#^M
+#/** MySQL database password */^M
+#define( 'DB_PASSWORD', 'password_here' );^M
+#^M
+#/** MySQL hostname */^M
+#define( 'DB_HOST', '172.18.0.2' );^M
+#^
 
 srcs=./srcs
 
@@ -106,15 +135,73 @@ function build_containers ()
 	done
 }
 
+	#-e MYSQL_IP=$MYSQL_IP \
+
+NETWORK_NAME="cluster";
+NGINX_IP="172.18.0.5";
+DOCKER_SUBNET="172.18.0.0/16";
+
+# DATABASE USERS INFO
+
+function run_mysql ()
+{
+	docker run --network ${NETWORK_NAME} --ip ${MYSQL_IP} -t -d \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 3306:3306 \
+	${USER}-mysql
+}
+
+function run_nginx ()
+{
+	docker run --network=${NETWORK_NAME} --ip=${NGINX_IP} -t -d \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 80:80 -p 443:443 \
+	${USER}-nginx
+}
+
+function run_wordpress ()
+{
+	docker run --network=${NETWORK_NAME} --ip=${WP_IP} -d -t \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 5050:5050 \
+	${USER}-wordpress
+}
+
+function run_phpmyadmin ()
+{
+	docker run --network=${NETWORK_NAME} --ip=${PMA_IP} -d -t \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 5000:5000 \
+	${USER}-phpmyadmin
+}
+
+
 function run_containers ()
 {
-	docker network create cluster
-	docker run --network=cluster -p 3306:3306 -d -t ${USER}-mysql
-	#docker network connect --alias db --alias mysql cluster ${USER}-mysql:latest
-	docker run --network=cluster -p 80:80 -p 443:443 -d -t ${USER}-nginx
-	docker run --network=cluster -p 5050:5050 -d -t  ${USER}-wordpress
-	docker run --network=cluster -p 5000:5000 -d -t  ${USER}-phpmyadmin
-	#docker network connect cluster ${USER}-nginx:latest
+	docker network rm ${NETWORK_NAME}
+	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	run_mysql;
+	run_wordpress;
+	#run_nginx;
+	#run_phpmyadmin;
+	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t ${USER}-mysql
+	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t ${USER}-mysql
+	#docker network connect --alias db --alias mysql ${NETWORK_NAME} ${USER}-mysql:latest
+	#docker run --network=${NETWORK_NAME} -p 5050:5050 -d -t  ${USER}-wordpress
+	#docker run --network=${NETWORK_NAME} -p 5000:5000 -d -t  ${USER}-phpmyadmin
+	#docker network connect ${NETWORK_NAME} ${USER}-nginx:latest
 	#docker network connect cluster ${USER}-wordpress:latest
 	#docker network connect cluster ${USER}-phpmyadmin:latest
 }
@@ -133,13 +220,14 @@ apply_kub ()
 
 function main ()
 {
+	docker kill $(docker ps -q);
 	#check_minikube;
 	#launch_minikube;
 	#build_containers;
 	build_mysql;
-	build_nginx;
 	build_wordpress;
-	build_phpmyadmin;
+	#build_nginx;
+	#build_phpmyadmin;
 	run_containers;
 	#apply_metal_LB;
 	#apply_kub;

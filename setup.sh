@@ -37,18 +37,6 @@ DB_PASS="user";
 WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
 
-#define( 'DB_NAME', 'database_name_here' );^M
-#^M
-#/** MySQL database username */^M
-#define( 'DB_USER', 'username_here' );^M
-#^M
-#/** MySQL database password */^M
-#define( 'DB_PASSWORD', 'password_here' );^M
-#^M
-#/** MySQL hostname */^M
-#define( 'DB_HOST', '172.18.0.2' );^M
-#^
-
 srcs=./srcs
 
 metallb_version="v0.9.3"
@@ -106,7 +94,6 @@ function build_mysql ()
 
 function build_phpmyadmin ()
 {
-# sed -i "s/\$HOSTNAME/$HOSTNAME/g" /etc/phpmyadmin/config.inc.php
 	svc=phpmyadmin;
 	docker build -t ${USER}-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
@@ -195,8 +182,8 @@ function run_containers ()
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	run_mysql;
 	run_wordpress;
-	#run_nginx;
-	#run_phpmyadmin;
+	run_nginx;
+	run_phpmyadmin;
 	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t ${USER}-mysql
 	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t ${USER}-mysql
 	#docker network connect --alias db --alias mysql ${NETWORK_NAME} ${USER}-mysql:latest
@@ -227,8 +214,8 @@ function main ()
 	#build_containers;
 	build_mysql;
 	build_wordpress;
-	#build_nginx;
-	#build_phpmyadmin;
+	build_nginx;
+	build_phpmyadmin;
 	run_containers;
 	#apply_metal_LB;
 	#apply_kub;

@@ -21,7 +21,7 @@ RUN		apk add --update --no-cache \
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
-		create_db_and_users.sql \
+		wordpress_db.sql \
 		./
 
 EXPOSE	3306

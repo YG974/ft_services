@@ -30,6 +30,8 @@ EXPOSE	5000
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
+RUN		sed -i "s/\'host\'] = \'\'/\'host\'] = \'$MYSQL_IP\'/g" /etc/phpmyadmin/config.inc.php
+
 #starting NGINX
 CMD		["./entrypoint.sh"]
 #ENTRYPOINT ["ash"]

@@ -37,6 +37,7 @@ DB_PASS="user";
 WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
 
+
 srcs=./srcs
 
 metallb_version="v0.9.3"
@@ -115,11 +116,15 @@ function build_wordpress ()
 
 function build_containers ()
 {
-	for service in services "${services[@]}"
-	do
-		echo "building ${services[@]}\n"
-		docker build -t ${USER}-${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
-	done
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
+	build_nginx;
+	#for service in services "${services[@]}"
+	#do
+		#echo "building ${services[@]}\n"
+		#docker build -t ${USER}-${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
+	#done
 }
 
 	#-e MYSQL_IP=$MYSQL_IP \
@@ -211,11 +216,11 @@ function main ()
 	docker kill $(docker ps -q);
 	#check_minikube;
 	#launch_minikube;
-	#build_containers;
-	build_mysql;
-	build_wordpress;
-	build_nginx;
-	build_phpmyadmin;
+	build_containers;
+	#build_mysql;
+	#build_wordpress;
+	#build_nginx;
+	#build_phpmyadmin;
 	run_containers;
 	#apply_metal_LB;
 	#apply_kub;

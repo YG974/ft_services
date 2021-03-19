@@ -10,6 +10,9 @@ services=(				\
 			#influxdb	\
 )
 
+kill:
+	zsh ./clean.sh
+
 test:
 	sh ./setup.sh
 

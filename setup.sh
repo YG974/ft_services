@@ -127,7 +127,6 @@ function build_containers ()
 	#done
 }
 
-	#-e MYSQL_IP=$MYSQL_IP \
 
 NETWORK_NAME="cluster";
 NGINX_IP="172.18.0.5";

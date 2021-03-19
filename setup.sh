@@ -150,6 +150,7 @@ function run_mysql ()
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-e WP_ADMIN=${WP_ADMIN}		-e WP_ADMIN_PASS=${WP_ADMIN_PASS} \
 	-p 3306:3306 \
 	${USER}-mysql
 }

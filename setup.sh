@@ -101,6 +101,7 @@ function build_phpmyadmin ()
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
 	--build-arg PMA_VERSION=${PMA_VERSION} \
+	--build-arg PHP_VERSION=${PHP_VERSION} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 

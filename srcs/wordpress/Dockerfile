@@ -27,7 +27,6 @@ RUN		apk add --update --no-cache \
 		php7-fpm=${PHP_VERSION} \
 		php7-mysqli=${PHP_VERSION}
 
-RUN		mkdir -p /run/nginx
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
@@ -52,6 +51,7 @@ COPY	entrypoint.sh \
 # NGINX
 COPY 	localhost.conf \
 		./
+RUN		mkdir -p /run/nginx
 RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
 RUN		rm /etc/nginx/conf.d/default.conf
 

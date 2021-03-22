@@ -11,13 +11,14 @@ LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 #ARG		NGINX_VERSION=1.16.1-r6
 ARG		PMA_VERSION
 ARG		NGINX_VERSION
+ARG		OPENRC_VERSION
 
 ENV MYSQL_IP=${MYSQL_IP}
 
 WORKDIR	./
 
 RUN		apk add --update --no-cache \
-		#openrc=${OPENRC_VERSION} \
+		openrc=${OPENRC_VERSION} \
 		phpmyadmin=${PMA_VERSION} \
 		nginx=${NGINX_VERSION}
 

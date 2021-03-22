@@ -98,6 +98,7 @@ function build_phpmyadmin ()
 	svc=phpmyadmin;
 	docker build -t ${USER}-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
 	--build-arg PMA_VERSION=${PMA_VERSION} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
@@ -108,6 +109,7 @@ function build_wordpress ()
 	svc=wordpress;
 	docker build -t ${USER}-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
 	--build-arg WP_VERSION=${WP_VERSION} \
 	--build-arg PHP_VERSION=${PHP_VERSION} \
@@ -137,6 +139,7 @@ DOCKER_SUBNET="172.18.0.0/16";
 function run_mysql ()
 {
 	docker run --network ${NETWORK_NAME} --ip ${MYSQL_IP} -t -d \
+	--name mysql \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
@@ -149,6 +152,7 @@ function run_mysql ()
 function run_nginx ()
 {
 	docker run --network=${NETWORK_NAME} --ip=${NGINX_IP} -t -d \
+	--name nginx \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
@@ -160,6 +164,7 @@ function run_nginx ()
 function run_wordpress ()
 {
 	docker run --network=${NETWORK_NAME} --ip=${WP_IP} -d -t \
+	--name wordpress \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
@@ -171,6 +176,7 @@ function run_wordpress ()
 function run_phpmyadmin ()
 {
 	docker run --network=${NETWORK_NAME} --ip=${PMA_IP} -d -t \
+	--name phpmyadmin \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
@@ -213,6 +219,7 @@ apply_kub ()
 function main ()
 {
 	docker kill $(docker ps -q);
+	docker rm wordpress mysql nginx	phpmyadmin;
 	#check_minikube;
 	#launch_minikube;
 	build_containers;

@@ -12,6 +12,7 @@ LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 ARG		WP_VERSION
 ARG		PHP_VERSION
 ARG		NGINX_VERSION
+ARG		OPENRC_VERSION
 
 #ENV MYSQL_IP=${MYSQL_IP}
 ENV WP_CONF="/srv/wordpress/wp-config.php"
@@ -20,8 +21,10 @@ WORKDIR	./
 
 RUN		apk add --update --no-cache \
 		nginx=${NGINX_VERSION} \
+		openrc=${OPENRC_VERSION} \
 		php7=${PHP_VERSION} \
 		php7-json=${PHP_VERSION} \
+		php7-fpm=${PHP_VERSION} \
 		php7-mysqli=${PHP_VERSION}
 
 RUN		mkdir -p /run/nginx

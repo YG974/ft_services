@@ -20,6 +20,7 @@ MYSQL_VERSION="10.4.17-r1";
 PMA_VERSION="4.9.5-r0";
 WP_VERSION="5.7";
 PHP_VERSION="7.3.22-r0";
+VSFTPD_VERSION="3.0.3-r6";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -27,6 +28,7 @@ MYSQL_IP="172.18.0.2";
 WP_IP="172.18.0.3";
 PMA_IP="172.18.0.4";
 NGINX_IP="172.18.0.5";
+FTPS_IP="172.18.0.6";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # DATABASE USERS INFO
@@ -117,6 +119,16 @@ function build_wordpress ()
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
+function build_ftps ()
+{
+	svc=ftps;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
+	--build-arg VSFTPD_VERSION=${VSFTPD_VERSION} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
 function build_containers ()
 {
 	build_mysql;
@@ -186,11 +198,21 @@ function run_phpmyadmin ()
 	${USER}-phpmyadmin
 }
 
+function run_ftps ()
+{
+	svc=ftps;
+	docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
+	--name ${svc} \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 21:21 -p 20:20 \
+	${USER}-${svc}
+}
 
 function run_containers ()
 {
-	docker network rm ${NETWORK_NAME}
-	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	run_mysql;
 	run_wordpress;
 	run_nginx;
@@ -220,15 +242,17 @@ apply_kub ()
 function main ()
 {
 	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx	phpmyadmin;
+	docker rm wordpress mysql nginx phpmyadmin ftps;
+	docker network rm ${NETWORK_NAME}
+	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	#check_minikube;
 	#launch_minikube;
-	build_containers;
+	#build_containers;
 	#build_mysql;
 	#build_wordpress;
-	#build_nginx;
-	#build_phpmyadmin;
-	run_containers;
+	build_ftps;
+	run_ftps;
+	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;
 	echo start

@@ -143,10 +143,6 @@ function build_containers ()
 }
 
 
-NETWORK_NAME="cluster";
-NGINX_IP="172.18.0.5";
-DOCKER_SUBNET="172.18.0.0/16";
-
 # DATABASE USERS INFO
 
 function run_mysql ()
@@ -201,13 +197,16 @@ function run_phpmyadmin ()
 function run_ftps ()
 {
 	svc=ftps;
-	docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
+	#docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
+	#docker run -d -t \
+	docker run -i -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
-	-p 21:21 -p 20:20 \
+	-p 21:21 -p 20:20 -p 2000:2000 -p 2001:2001 -p 2002:2002 -p 2003:2003 \
+	-p 2004:2004 \
 	${USER}-${svc}
 }
 
@@ -243,8 +242,8 @@ function main ()
 {
 	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps;
-	docker network rm ${NETWORK_NAME}
-	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	#docker network rm ${NETWORK_NAME}
+	#docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	#check_minikube;
 	#launch_minikube;
 	#build_containers;

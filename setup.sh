@@ -31,13 +31,17 @@ NGINX_IP="172.18.0.5";
 FTPS_IP="172.18.0.6";
 DOCKER_SUBNET="172.18.0.0/16";
 
-# DATABASE USERS INFO
+# USERS INFO
 
 DB_NAME="wp_db";
 DB_USER="user";
 DB_PASS="user";
 WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
+
+# FTPS settings
+FTPS_USER="ftp_user"
+FTPS_PASS="ftp_pass"
 
 
 srcs=./srcs
@@ -126,6 +130,8 @@ function build_ftps ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg VSFTPD_VERSION=${VSFTPD_VERSION} \
+	--build-arg	FTPS_USER=${FTPS_USER} \
+	--build-arg	FTPS_PASS=${FTPS_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -205,8 +211,7 @@ function run_ftps ()
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
-	-p 21:21 -p 20:20 -p 2000:2000 -p 2001:2001 -p 2002:2002 -p 2003:2003 \
-	-p 2004:2004 \
+	-p 21:21 -p 20:20 -p 21000-21004:21000-21004 \
 	${USER}-${svc}
 }
 

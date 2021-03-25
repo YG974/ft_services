@@ -37,6 +37,9 @@ COPY	entrypoint.sh \
 # copy vsftpd setting file in etc
 RUN		mv vsftpd.conf /etc/vsftpd/vsftpd.conf
 
+# create user, neceserary to login ftps
+RUN		echo -e "$FTPS_PASS\n$FTPS_PASS" | adduser $FTPS_USER
+
 # Set up openrc
 RUN		openrc && \
 		touch /run/openrc/softlevel

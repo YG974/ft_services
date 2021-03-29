@@ -6,8 +6,8 @@ openrc
 touch /run/openrc/softlevel
 
 
-ash
+#ash
 #sed -i 's/skip-networking/# skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 
 
-#tail -F /dev/null
+tail -F /dev/null

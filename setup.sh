@@ -51,7 +51,7 @@ FTPS_USER="ftp_user";
 FTPS_PASS="ftp_pass";
 
 # INFLUXDB settings
-INFLUXDB_DB="influxdb";
+INFLUXDB_DB="telegraf";
 INFLUXDB_ADMIN_USER="admin";
 INFLUXDB_ADMIN_PASS="admin";
 INFLUXDB_USER="user";
@@ -254,7 +254,6 @@ function run_ftps ()
 {
 	svc=ftps;
 	docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
-	docker run -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -267,8 +266,7 @@ function run_ftps ()
 function run_grafana ()
 {
 	svc=grafana;
-	docker run --network=${NETWORK_NAME} --ip=${GRAFANA_IP} \
-	docker run -d -t \
+	docker run --network=${NETWORK_NAME} --ip=${GRAFANA_IP} -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -281,8 +279,7 @@ function run_grafana ()
 function run_influxdb ()
 {
 	svc=influxdb;
-	docker run --network=${NETWORK_NAME} --ip=${INFLUXDB_DB_IP} \
-	docker run -d -t \
+	docker run --network=${NETWORK_NAME} --ip=${INFLUXDB_DB_IP} -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -294,11 +291,10 @@ function run_influxdb ()
 	${USER}-${svc}
 }
 
-function run_telefraf ()
+function run_telegraf ()
 {
-	svc=telefraf;
-	docker run --network=${NETWORK_NAME} --ip=${TELEGRAF_IP} \
-	docker run -d -t \
+	svc=telegraf;
+	docker run --network=${NETWORK_NAME} --ip=${TELEGRAF_IP} -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -341,7 +337,7 @@ apply_kub ()
 function main ()
 {
 	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegram influxdb;
+	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	#check_minikube;
@@ -352,11 +348,11 @@ function main ()
 	#build_ftps;
 	#run_ftps;
 	build_grafana;
-	run_grafana;
 	build_influxdb;
-	run_influxdb;
 	build_telegraf;
-	run_telefraf;
+	run_grafana;
+	run_influxdb;
+	run_telegraf;
 	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;

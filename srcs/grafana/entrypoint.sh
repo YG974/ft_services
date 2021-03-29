@@ -6,7 +6,7 @@ openrc
 touch /run/openrc/softlevel
 
 
-ash
+#ash
 #service start
 # https://wiki.alpinelinux.org/wiki/MariaDB
 # to be able to communicate with other conteners
@@ -25,4 +25,4 @@ ash
 
 #mysql --user=root $DB_NAME < wordpress_db.sql
 
-#tail -F /dev/null
+tail -F /dev/null

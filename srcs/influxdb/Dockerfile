@@ -19,8 +19,12 @@ RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
 
 RUN		apk add --update --no-cache \
+		openrc=${OPENRC_VERSION} \
 		influxdb=${INFLUXDB_VERSION}
-		#openrc=${OPENRC_VERSION} \
+
+# Set up openrc
+RUN		openrc && \
+		touch /run/openrc/softlevel
 
 COPY	entrypoint.sh \
 		./

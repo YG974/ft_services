@@ -21,6 +21,10 @@ PMA_VERSION="4.9.5-r0";
 WP_VERSION="5.7";
 PHP_VERSION="7.3.22-r0";
 VSFTPD_VERSION="3.0.3-r6";
+GRAFANA_VERSION="7.3.6-r0";
+TELEGRAF_VERSION="1.17.0-r0";
+INFLUXDB_VERSION="1.7.7-r1";
+
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -29,6 +33,9 @@ WP_IP="172.18.0.3";
 PMA_IP="172.18.0.4";
 NGINX_IP="172.18.0.5";
 FTPS_IP="172.18.0.6";
+TELEGRAF_IP="172.18.0.7";
+INFLUX_DB_IP="172.18.0.8";
+GRAFANA_IP="172.18.0.9";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # USERS INFO
@@ -40,8 +47,15 @@ WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
 
 # FTPS settings
-FTPS_USER="ftp_user"
-FTPS_PASS="ftp_pass"
+FTPS_USER="ftp_user";
+FTPS_PASS="ftp_pass";
+
+# INFLUXDB settings
+INFLUXDB_DB="influxdb";
+INFLUXDB_ADMIN_USER="admin";
+INFLUXDB_ADMIN_PASS="admin";
+INFLUXDB_USER="user";
+INFLUXDB_PASS="user";
 
 
 srcs=./srcs
@@ -135,6 +149,42 @@ function build_ftps ()
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
+function build_grafana ()
+{
+	svc=grafana;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
+	--build-arg GRAFANA_VERSION=${GRAFANA_VERSION} \
+	--build-arg	FTPS_USER=${FTPS_USER} \
+	--build-arg	FTPS_PASS=${FTPS_PASS} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
+function build_influxdb ()
+{
+	svc=influxdb;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
+	--build-arg INFLUXDB_VERSION=${INFLUXDB_VERSION} \
+	--build-arg	INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
+	--build-arg	INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
+	--build-arg	INFLUXDB_USER=${INFLUXDB_USER} \
+	--build-arg	INFLUXDB_PASS=${INFLUXDB_PASS} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
+function build_telegraf ()
+{
+	svc=telegraf;
+	docker build -t ${USER}-${svc} \
+	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
+	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
+	--build-arg TELEGRAF_VERSION=${TELEGRAF_VERSION} \
+	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
+}
+
 function build_containers ()
 {
 	build_mysql;
@@ -203,15 +253,60 @@ function run_phpmyadmin ()
 function run_ftps ()
 {
 	svc=ftps;
-	#docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
-	#docker run -d -t \
-	docker run -i -t \
+	docker run --network=${NETWORK_NAME} --ip=${FTPS_IP} -d -t \
+	docker run -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 21:21 -p 20:20 -p 21000-21004:21000-21004 \
+	${USER}-${svc}
+}
+
+function run_grafana ()
+{
+	svc=grafana;
+	docker run --network=${NETWORK_NAME} --ip=${GRAFANA_IP} \
+	docker run -d -t \
+	--name ${svc} \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 3000:3000 \
+	${USER}-${svc}
+}
+
+function run_influxdb ()
+{
+	svc=influxdb;
+	docker run --network=${NETWORK_NAME} --ip=${INFLUXDB_DB_IP} \
+	docker run -d -t \
+	--name ${svc} \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e INFLUXDB_USER=${INFLUXDB_USER}		-e INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
+	-e INFLUXDB_PASS=${INFLUXDB_PASS}		-e INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 8086:8086 \
+	${USER}-${svc}
+}
+
+function run_telefraf ()
+{
+	svc=telefraf;
+	docker run --network=${NETWORK_NAME} --ip=${TELEGRAF_IP} \
+	docker run -d -t \
+	--name ${svc} \
+	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
+	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
+	-e INFLUXDB_USER=${INFLUXDB_USER}		-e INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
+	-e INFLUXDB_PASS=${INFLUXDB_PASS}		-e INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
+	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
+	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-p 8125:8125 \
 	${USER}-${svc}
 }
 
@@ -246,16 +341,22 @@ apply_kub ()
 function main ()
 {
 	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx phpmyadmin ftps;
-	#docker network rm ${NETWORK_NAME}
-	#docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegram influxdb;
+	docker network rm ${NETWORK_NAME}
+	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	#check_minikube;
 	#launch_minikube;
 	#build_containers;
 	#build_mysql;
 	#build_wordpress;
-	build_ftps;
-	run_ftps;
+	#build_ftps;
+	#run_ftps;
+	build_grafana;
+	run_grafana;
+	build_influxdb;
+	run_influxdb;
+	build_telegraf;
+	run_telefraf;
 	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;

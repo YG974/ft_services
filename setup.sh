@@ -168,10 +168,10 @@ function build_influxdb ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg INFLUXDB_VERSION=${INFLUXDB_VERSION} \
-	--build-arg	INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
-	--build-arg	INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
-	--build-arg	INFLUXDB_USER=${INFLUXDB_USER} \
-	--build-arg	INFLUXDB_PASS=${INFLUXDB_PASS} \
+	--build-arg INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
+	--build-arg INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
+	--build-arg INFLUXDB_USER=${INFLUXDB_USER} \
+	--build-arg INFLUXDB_PASS=${INFLUXDB_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -287,6 +287,7 @@ function run_influxdb ()
 	-e INFLUXDB_PASS=${INFLUXDB_PASS}		-e INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-e INFLUXDB_DB=${INFLUXDB_DB} \
 	-p 8086:8086 \
 	${USER}-${svc}
 }

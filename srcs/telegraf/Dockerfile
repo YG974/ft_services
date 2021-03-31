@@ -25,7 +25,10 @@ RUN		apk add --update --no-cache \
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
+		telegraf.conf \
 		./
+
+RUN		mv telegraf.conf /etc/telegraf.conf
 
 EXPOSE	8125
 

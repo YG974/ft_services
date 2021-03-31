@@ -5,6 +5,8 @@
 openrc
 touch /run/openrc/softlevel
 
+cd /usr/share/grafana
+/bin/grafana-server
 
 #ash
 #service start

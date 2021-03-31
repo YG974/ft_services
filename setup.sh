@@ -303,6 +303,7 @@ function run_telegraf ()
 	-e INFLUXDB_PASS=${INFLUXDB_PASS}		-e INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
+	-v /var/run/docker.sock:/var/run/docker.sock \
 	-p 8125:8125 \
 	${USER}-${svc}
 }
@@ -344,16 +345,22 @@ function main ()
 	#check_minikube;
 	#launch_minikube;
 	#build_containers;
-	#build_mysql;
-	#build_wordpress;
-	#build_ftps;
-	#run_ftps;
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
+	build_ftps;
+	build_nginx;
 	build_grafana;
 	build_influxdb;
 	build_telegraf;
 	run_grafana;
 	run_influxdb;
 	run_telegraf;
+	run_ftps;
+	run_nginx;
+	run_phpmyadmin;
+	run_wordpress;
+	run_mysql;
 	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;

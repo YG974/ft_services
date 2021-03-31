@@ -25,7 +25,15 @@ RUN		apk add --update --no-cache \
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
+		datasources.yaml \
+		dashboard_provider.yaml \
+		dashboard.json \
 		./
+
+RUN		mv ./datasources.yaml /usr/share/grafana/conf/provisioning/datasources/.
+RUN		mv ./dashboard_provider.yaml \
+			/usr/share/grafana/conf/provisioning/dashboards/.
+RUN		mv ./dashboard.json /usr/share/grafana/conf/provisioning/dashboards/.
 
 EXPOSE	3000
 

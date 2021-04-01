@@ -19,11 +19,8 @@ RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
 
 RUN		apk add --update --no-cache \
-		openrc=${OPENRC_VERSION} \
 		telegraf=${TELEGRAF_VERSION} 
-		#openrc=${OPENRC_VERSION} \
 
-#COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
 		telegraf.conf \
 		./
@@ -35,7 +32,5 @@ EXPOSE	8125
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
-#starting NGINX
-CMD		["./entrypoint.sh"]
-#ENTRYPOINT ["ash"]
-# mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+# CMD		["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

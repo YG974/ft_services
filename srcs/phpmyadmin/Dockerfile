@@ -43,8 +43,6 @@ RUN		chmod +x ./entrypoint.sh
 
 
 #starting NGINX
-CMD		["./entrypoint.sh"]
-#ENTRYPOINT ["ash"]
-#ENTRYPOINT ["sh", "./entrypoint.sh"]
-#ENTRYPOINT ["./entrypoint.sh"]
+# CMD		["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 

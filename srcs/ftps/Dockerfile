@@ -9,15 +9,11 @@ ARG		VSFTPD_VERSION
 ARG		OPENRC_VERSION
 ARG		FTPS_USER
 ARG		FTPS_PASS
-#ENV		FTPS_USER=${FTPS_USER}
-#ENV		FTPS_PASS=${FTPS_PASS}
 
 WORKDIR	./
 
 RUN		apk add vsftpd=${VSFTPD_VERSION} \
 		openrc=${OPENRC_VERSION} \
-		lftp \
-		curl \
 		openssl
 
 # https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
@@ -40,10 +36,6 @@ RUN		mv vsftpd.conf /etc/vsftpd/vsftpd.conf
 # create user, neceserary to login ftps
 RUN		echo -e "$FTPS_PASS\n$FTPS_PASS" | adduser $FTPS_USER
 
-# Set up openrc
-RUN		openrc && \
-		touch /run/openrc/softlevel
-
 # port 21 = command port
 # port 20 = data transfer port for active mode
 # 21 000 and more, data transfer for passive mode.
@@ -53,6 +45,5 @@ EXPOSE	21 20 21000-21004
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
-
-CMD		["./entrypoint.sh"]
-#CMD		["ash"]
+# CMD		["./entrypoint.sh"]
+ENTRYPOINT		["./entrypoint.sh"]

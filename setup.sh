@@ -203,7 +203,7 @@ function build_containers ()
 
 function run_mysql ()
 {
-	docker run --network ${NETWORK_NAME} --ip ${MYSQL_IP} -t -d \
+	docker run --network=${NETWORK_NAME} --ip=${MYSQL_IP} -t -d \
 	--name mysql \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -342,9 +342,9 @@ function main ()
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	#check_minikube;
-	#launch_minikube;
-	#build_containers;
+	# check_minikube;
+	# launch_minikube;
+	# build_containers;
 	build_mysql;
 	build_wordpress;
 	build_phpmyadmin;
@@ -353,7 +353,6 @@ function main ()
 	build_grafana;
 	build_influxdb;
 	build_telegraf;
-	run_grafana;
 	run_influxdb;
 	run_telegraf;
 	run_ftps;
@@ -361,6 +360,7 @@ function main ()
 	run_phpmyadmin;
 	run_wordpress;
 	run_mysql;
+	run_grafana;
 	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;

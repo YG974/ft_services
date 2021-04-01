@@ -40,7 +40,5 @@ EXPOSE	3000
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
-#starting NGINX
-CMD		["./entrypoint.sh"]
-#ENTRYPOINT ["ash"]
-# mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+# CMD		["./entrypoint.sh"]
+ENTRYPOINT		["./entrypoint.sh"]

@@ -33,7 +33,7 @@ COPY	entrypoint.sh \
 RUN		mv ./datasources.yaml /usr/share/grafana/conf/provisioning/datasources/.
 RUN		mv ./dashboard_provider.yaml \
 			/usr/share/grafana/conf/provisioning/dashboards/.
-RUN		mv ./dashboard.json /usr/share/grafana/conf/provisioning/dashboards/.
+# RUN		mv ./dashboard.json /usr/share/grafana/conf/provisioning/dashboards/.
 
 EXPOSE	3000
 

@@ -2,11 +2,11 @@
 
 # GRAFANA
 
-openrc
-touch /run/openrc/softlevel
+# openrc
+# touch /run/openrc/softlevel
 
 cd /usr/share/grafana
-/usr/sbin/grafana-server
+exec /usr/sbin/grafana-server
 
 #ash
 #service start

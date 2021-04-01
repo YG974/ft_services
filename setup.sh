@@ -279,7 +279,7 @@ function run_grafana ()
 function run_influxdb ()
 {
 	svc=influxdb;
-	docker run --network=${NETWORK_NAME} --ip=${INFLUXDB_DB_IP} -d -t \
+	docker run --network=${NETWORK_NAME} --ip=${INFLUX_DB_IP} -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -346,22 +346,22 @@ function main ()
 	# check_minikube;
 	# launch_minikube;
 	# build_containers;
-	# build_mysql;
-	# build_wordpress;
-	# build_phpmyadmin;
-	# build_ftps;
-	# build_nginx;
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
+	build_ftps;
+	build_nginx;
 	build_grafana;
 	build_influxdb;
 	build_telegraf;
 	run_influxdb;
+	run_mysql;
 	run_telegraf;
 	run_grafana;
-	# run_ftps;
-	# run_nginx;
-	# run_phpmyadmin;
-	# run_wordpress;
-	# run_mysql;
+	run_ftps;
+	run_nginx;
+	run_phpmyadmin;
+	run_wordpress;
 	#run_containers;
 	#apply_metal_LB;
 	#apply_kub;

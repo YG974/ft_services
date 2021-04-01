@@ -35,14 +35,11 @@ RUN		mkdir -p /run/nginx
 RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
 RUN		rm /etc/nginx/conf.d/default.conf
 
-
 EXPOSE	5000
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
-
-#starting NGINX
 # CMD		["./entrypoint.sh"]
 ENTRYPOINT ["./entrypoint.sh"]
 

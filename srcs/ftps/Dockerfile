@@ -45,5 +45,5 @@ EXPOSE	21 20 21000-21004
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
 
-# CMD		["./entrypoint.sh"]
-ENTRYPOINT		["./entrypoint.sh"]
+CMD		["./entrypoint.sh"]
+# ENTRYPOINT		["./entrypoint.sh"]

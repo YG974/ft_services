@@ -6,4 +6,6 @@
 
 exec /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf &
 
-ash
+# ash
+
+tail -F /dev/null

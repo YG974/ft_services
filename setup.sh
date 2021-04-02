@@ -4,9 +4,9 @@
 
 services=(				\
 			nginx		\
-			wordpress	\
-			mysql		\
-			phpmyadmin	\
+			# wordpress	\
+			# mysql		\
+			# phpmyadmin	\
 			#ftps		\
 			#grafana	\
 			#influxdb	\
@@ -24,7 +24,7 @@ VSFTPD_VERSION="3.0.3-r6";
 GRAFANA_VERSION="7.3.6-r0";
 TELEGRAF_VERSION="1.17.0-r0";
 INFLUXDB_VERSION="1.7.7-r1";
-
+OPENSSL_VERSION="";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -39,7 +39,6 @@ GRAFANA_IP="172.18.0.9";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # USERS INFO
-
 DB_NAME="wp_db";
 DB_USER="user";
 DB_PASS="user";
@@ -60,8 +59,8 @@ INFLUXDB_PASS="user";
 
 srcs=./srcs
 
-metallb_version="v0.9.3"
-minikube_version="v1.9.0"
+METALLB_VERSION="v0.9.3"
+MINIKUBE_VERSION="v1.9.0"
 
 function launch_minikube ()
 {
@@ -333,6 +332,7 @@ apply_metal_LB ()
 
 apply_kub ()
 {
+	# kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
 	kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
 
 }
@@ -343,28 +343,28 @@ function main ()
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	# check_minikube;
-	# launch_minikube;
+	check_minikube;
+	launch_minikube;
 	# build_containers;
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_ftps;
 	build_nginx;
-	build_grafana;
-	build_influxdb;
-	build_telegraf;
-	run_influxdb;
-	run_mysql;
-	run_telegraf;
-	run_grafana;
-	run_ftps;
-	run_nginx;
-	run_phpmyadmin;
-	run_wordpress;
+	# build_mysql;
+	# build_wordpress;
+	# build_phpmyadmin;
+	# build_ftps;
+	# build_grafana;
+	# build_influxdb;
+	# build_telegraf;
+	# run_influxdb;
+	# run_mysql;
+	# run_telegraf;
+	# run_grafana;
+	# run_ftps;
+	# run_nginx;
+	# run_phpmyadmin;
+	# run_wordpress;
 	#run_containers;
 	#apply_metal_LB;
-	#apply_kub;
+	apply_kub;
 	echo start
 }
 

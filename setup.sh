@@ -66,7 +66,7 @@ function launch_minikube ()
 {
 	echo "launch Minikube\n";
 # deleting previous clusters
-minikube delete > /dev/null 2>&1
+# minikube delete > /dev/null 2>&1
 minikube start --driver=docker --cpus=2
 #minikube addons enable metallb
 minikube addons enable metrics-server
@@ -328,12 +328,13 @@ apply_metal_LB ()
 {
 	kubectl apply -f "$srcs/config.yaml"
 	kubectl apply -f "$srcs/metallb.yaml"
+	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 apply_kub ()
 {
-	# kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
-	kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
+	svc=nginx;
+	kubectl apply -f "${srcs}/${svc}/${svc}\.yaml"
 
 }
 
@@ -346,6 +347,7 @@ function main ()
 	check_minikube;
 	launch_minikube;
 	# build_containers;
+	apply_metal_LB;
 	build_nginx;
 	# build_mysql;
 	# build_wordpress;
@@ -363,7 +365,6 @@ function main ()
 	# run_phpmyadmin;
 	# run_wordpress;
 	#run_containers;
-	#apply_metal_LB;
 	apply_kub;
 	echo start
 }

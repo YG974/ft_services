@@ -27,6 +27,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+        metallb.universe.tf/allow-shared-ip: shared
+        metallb.universe.tf/address-pool: ip-pools
   name: nginx
 spec:
   ports:

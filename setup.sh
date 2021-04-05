@@ -56,6 +56,8 @@ INFLUXDB_ADMIN_PASS="admin";
 INFLUXDB_USER="user";
 INFLUXDB_PASS="user";
 
+export USER='user42'
+
 
 srcs=./srcs
 

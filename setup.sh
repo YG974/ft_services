@@ -24,7 +24,7 @@ VSFTPD_VERSION="3.0.3-r6";
 GRAFANA_VERSION="7.3.6-r0";
 TELEGRAF_VERSION="1.17.0-r0";
 INFLUXDB_VERSION="1.7.7-r1";
-OPENSSL_VERSION="";
+# OPENSSL_VERSION="1.1.1k-r0";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -334,13 +334,14 @@ apply_metal_LB ()
 apply_kub ()
 {
 	svc=nginx;
-	kubectl apply -f "${srcs}/${svc}/${svc}\.yaml"
+	echo ici
+	kubectl apply -f "${srcs}/${svc}/${svc}.yaml"
 
 }
 
 function main ()
 {
-	docker kill $(docker ps -q);
+	docker kill $(docker p -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}

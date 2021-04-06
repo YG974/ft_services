@@ -28,16 +28,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-        metallb.universe.tf/allow-shared-ip: shared
-        metallb.universe.tf/address-pool: ip-pools
   name: mysql
 spec:
-  ports:
-  - port: 3306
   selector:
     app: mysql
-  type: LoadBalancer
+  type: ClusterIP
+  ports:
+  - port: 3306
+  # targetPort: 3306
 ---
 apiVersion: apps/v1
 kind: Deployment

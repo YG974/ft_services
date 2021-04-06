@@ -342,12 +342,13 @@ apply_kub ()
 
 function main ()
 {
-	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
-	docker network rm ${NETWORK_NAME}
+	# docker kill $(docker ps -q);
+	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
+	# docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	check_minikube;
 	launch_minikube;
+	apply_metal_LB;
 	# build_containers;
 	build_mysql;
 	build_wordpress;
@@ -366,7 +367,6 @@ function main ()
 	# run_phpmyadmin;
 	# run_wordpress;
 	#run_containers;
-	apply_metal_LB;
 	apply_kub;
 	echo start
 }

@@ -1,53 +1,29 @@
 apiVersion: v1
-kind: Service
+kind: PersistentVolume
 metadata:
-  annotations:
-        metallb.universe.tf/allow-shared-ip: shared
-        metallb.universe.tf/address-pool: ip-pools
-  name: nginx
+  name: mysql-pv-volume
+  labels:
+    type: local
 spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  selector:
-    app: nginx
-  type: LoadBalancer
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  # hostPath:
+  #   path: "/mnt/data"
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: nginx
+  name: mysql-pv-claim
 spec:
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: my-nginx
-        imagePullPolicy: Never
-        ports:
-        - name: http
-          containerPort: 80
-        - name: https
-          containerPort: 443
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
 ---
 apiVersion: v1
 kind: Service
@@ -55,18 +31,58 @@ metadata:
   annotations:
         metallb.universe.tf/allow-shared-ip: shared
         metallb.universe.tf/address-pool: ip-pools
-  name: nginx
+  name: mysql
 spec:
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
+  - port: 3306
   selector:
-    app: nginx
+    app: mysql
   type: LoadBalancer
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - image: mysql
+        name: my-mysql
+        env:
+          # Use secret in real usage
+        - name: DB_NAME
+          value: $DB_NAME
+        - name: DB_USER
+          value: $DB_USER
+        - name: DB_PASS
+          value: $DB_PASS
+        - name: WP_ADMIN
+          value: $WP_ADMIN
+        - name: DB_ADMIN_PASS
+          value: $DB_ADMIN_PASS
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+        claimName: mysql-pv-claim

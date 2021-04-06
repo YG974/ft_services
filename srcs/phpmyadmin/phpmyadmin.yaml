@@ -4,43 +4,36 @@ metadata:
   annotations:
         metallb.universe.tf/allow-shared-ip: shared
         metallb.universe.tf/address-pool: ip-pools
-  name: nginx
+  name: phpmyadmin
 spec:
   ports:
   - name: http
-    port: 80
     protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  selector:
-    app: nginx
+    port: 5000  
+    targetPort: 5000
+    app: phpmyadmin
   type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: phpmyadmin
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: phpmyadmin
   template:
     metadata:
       labels:
-        app: nginx
+        app: phpmyadmin
     spec:
       containers:
-      - name: nginx
-        image: my-nginx
+      - name: phpmyadmin
+        image: my-phpmyadmin
         imagePullPolicy: Never
         ports:
         - name: http
-          containerPort: 80
-        - name: https
-          containerPort: 443
+          containerPort: 5000
         resources:
           requests:
             memory: "64Mi"
@@ -48,25 +41,3 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-        metallb.universe.tf/allow-shared-ip: shared
-        metallb.universe.tf/address-pool: ip-pools
-  name: nginx
-spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  selector:
-    app: nginx
-  type: LoadBalancer
-

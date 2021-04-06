@@ -48,3 +48,25 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+        metallb.universe.tf/allow-shared-ip: shared
+        metallb.universe.tf/address-pool: ip-pools
+  name: nginx
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: nginx
+  type: LoadBalancer
+

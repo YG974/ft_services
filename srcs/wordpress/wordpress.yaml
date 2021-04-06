@@ -11,7 +11,6 @@ spec:
     protocol: TCP
     port: 5050  
     targetPort: 5050
-    app: wordpress
   type: LoadBalancer
 ---
 apiVersion: apps/v1

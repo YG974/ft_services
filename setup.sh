@@ -3,10 +3,10 @@
 #--------------------------- Variables ----------------------------------------#
 
 services=(				\
-			nginx		\
-			wordpress	\
 			mysql		\
+			wordpress	\
 			phpmyadmin	\
+			nginx		\
 			#ftps		\
 			#grafana	\
 			#influxdb	\
@@ -67,7 +67,8 @@ function launch_minikube ()
 	echo "launch Minikube\n";
 # deleting previous clusters
 minikube delete > /dev/null 2>&1
-minikube start --driver=docker --cpus=2
+minikube start 
+# minikube start --driver=docker --cpus=2
 #minikube addons enable metallb
 minikube addons enable metrics-server
 minikube addons enable dashboard
@@ -328,12 +329,15 @@ apply_metal_LB ()
 {
 	kubectl apply -f "$srcs/config.yaml"
 	kubectl apply -f "$srcs/metallb.yaml"
+	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 apply_kub ()
 {
-	kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
-
+	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
+	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 }
 
 function main ()
@@ -341,29 +345,29 @@ function main ()
 	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
-	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	# check_minikube;
-	# launch_minikube;
+	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	check_minikube;
+	launch_minikube;
 	# build_containers;
 	build_mysql;
 	build_wordpress;
 	build_phpmyadmin;
-	build_ftps;
 	build_nginx;
-	build_grafana;
-	build_influxdb;
-	build_telegraf;
-	run_influxdb;
-	run_mysql;
-	run_telegraf;
-	run_grafana;
-	run_ftps;
-	run_nginx;
-	run_phpmyadmin;
-	run_wordpress;
+	# build_ftps;
+	# build_grafana;
+	# build_influxdb;
+	# build_telegraf;
+	# run_influxdb;
+	# run_mysql;
+	# run_telegraf;
+	# run_grafana;
+	# run_ftps;
+	# run_nginx;
+	# run_phpmyadmin;
+	# run_wordpress;
 	#run_containers;
-	#apply_metal_LB;
-	#apply_kub;
+	apply_metal_LB;
+	apply_kub;
 	echo start
 }
 
@@ -429,7 +433,6 @@ done
 #kubectl apply -f "$srcs/config.yaml"
 #kubectl apply -f "$srcs/metallb.yaml"
 # On first install only
-#kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
 
 #for service in services "${services[@]}"

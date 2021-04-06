@@ -1,15 +1,15 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mysql-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: mysql-pv-volume
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 2Gi
+#   accessModes:
+#     - ReadWriteOnce
   # hostPath:
   #   path: "/mnt/data"
 ---
@@ -18,7 +18,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
 spec:
-  storageClassName: manual
+  # storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:
@@ -60,20 +60,26 @@ spec:
         env:
           # Use secret in real usage
         - name: DB_NAME
-          value: $DB_NAME
+          # value: $DB_NAME
+          value: wp_db
         - name: DB_USER
-          value: $DB_USER
+          # value: $DB_USER
+          value: user
         - name: DB_PASS
-          value: $DB_PASS
+          # value: $DB_PASS
+          value: user
         - name: WP_ADMIN
-          value: $WP_ADMIN
+          # value: $WP_ADMIN
+          value: admin
         - name: DB_ADMIN_PASS
-          value: $DB_ADMIN_PASS
+          # value: $DB_ADMIN_PASS
+          value: admin
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
+        - name: mysql-pv-volume
+        # mysql-persistent-storage
           mountPath: /var/lib/mysql
         resources:
           requests:
@@ -83,6 +89,7 @@ spec:
             memory: "128Mi"
             cpu: "500m"
       volumes:
-      - name: mysql-persistent-storage
+      # - name: mysql-persistent-storage
+      - name: mysql-pv-volume
         persistentVolumeClaim:
-        claimName: mysql-pv-claim
+          claimName: mysql-pv-claim

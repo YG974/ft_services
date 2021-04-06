@@ -4,9 +4,9 @@
 
 services=(				\
 			nginx		\
-			# wordpress	\
-			# mysql		\
-			# phpmyadmin	\
+			wordpress	\
+			mysql		\
+			phpmyadmin	\
 			#ftps		\
 			#grafana	\
 			#influxdb	\
@@ -24,7 +24,6 @@ VSFTPD_VERSION="3.0.3-r6";
 GRAFANA_VERSION="7.3.6-r0";
 TELEGRAF_VERSION="1.17.0-r0";
 INFLUXDB_VERSION="1.7.7-r1";
-# OPENSSL_VERSION="1.1.1k-r0";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -39,6 +38,7 @@ GRAFANA_IP="172.18.0.9";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # USERS INFO
+
 DB_NAME="wp_db";
 DB_USER="user";
 DB_PASS="user";
@@ -47,7 +47,7 @@ WP_ADMIN_PASS="admin";
 
 # FTPS settings
 FTPS_USER="ftp_user";
-FTPS_PASS="ftp_pass";
+FTPS_PASS="ftp_pass";	
 
 # INFLUXDB settings
 INFLUXDB_DB="telegraf";
@@ -56,19 +56,17 @@ INFLUXDB_ADMIN_PASS="admin";
 INFLUXDB_USER="user";
 INFLUXDB_PASS="user";
 
-export USER='user42'
-
 
 srcs=./srcs
 
-METALLB_VERSION="v0.9.3"
-MINIKUBE_VERSION="v1.9.0"
+metallb_version="v0.9.3"
+minikube_version="v1.9.0"
 
 function launch_minikube ()
 {
 	echo "launch Minikube\n";
 # deleting previous clusters
-# minikube delete > /dev/null 2>&1
+minikube delete > /dev/null 2>&1
 minikube start --driver=docker --cpus=2
 #minikube addons enable metallb
 minikube addons enable metrics-server
@@ -97,7 +95,7 @@ function check_minikube ()
 function build_nginx ()
 {
 	svc=nginx;
-		docker build -t ${USER}-${svc} \
+		docker build -t my-${svc} \
 		--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 		--build-arg NGINX_VERSION=${NGINX_VERSION} \
 		-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
@@ -106,7 +104,7 @@ function build_nginx ()
 function build_mysql ()
 {
 	svc=mysql;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg MYSQL_VERSION=${MYSQL_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
@@ -117,7 +115,7 @@ function build_mysql ()
 function build_phpmyadmin ()
 {
 	svc=phpmyadmin;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
@@ -129,7 +127,7 @@ function build_phpmyadmin ()
 function build_wordpress ()
 {
 	svc=wordpress;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg NGINX_VERSION=${NGINX_VERSION} \
@@ -141,7 +139,7 @@ function build_wordpress ()
 function build_ftps ()
 {
 	svc=ftps;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg VSFTPD_VERSION=${VSFTPD_VERSION} \
@@ -153,7 +151,7 @@ function build_ftps ()
 function build_grafana ()
 {
 	svc=grafana;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg GRAFANA_VERSION=${GRAFANA_VERSION} \
@@ -165,7 +163,7 @@ function build_grafana ()
 function build_influxdb ()
 {
 	svc=influxdb;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg INFLUXDB_VERSION=${INFLUXDB_VERSION} \
@@ -179,7 +177,7 @@ function build_influxdb ()
 function build_telegraf ()
 {
 	svc=telegraf;
-	docker build -t ${USER}-${svc} \
+	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg TELEGRAF_VERSION=${TELEGRAF_VERSION} \
@@ -195,7 +193,7 @@ function build_containers ()
 	#for service in services "${services[@]}"
 	#do
 		#echo "building ${services[@]}\n"
-		#docker build -t ${USER}-${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
+		#docker build -t ${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
 	#done
 }
 
@@ -212,7 +210,7 @@ function run_mysql ()
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-e WP_ADMIN=${WP_ADMIN}		-e WP_ADMIN_PASS=${WP_ADMIN_PASS} \
 	-p 3306:3306 \
-	${USER}-mysql
+	mysql
 }
 
 function run_nginx ()
@@ -224,7 +222,7 @@ function run_nginx ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 80:80 -p 443:443 \
-	${USER}-nginx
+	nginx
 }
 
 function run_wordpress ()
@@ -236,7 +234,7 @@ function run_wordpress ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 5050:5050 \
-	${USER}-wordpress
+	wordpress
 }
 
 function run_phpmyadmin ()
@@ -248,7 +246,7 @@ function run_phpmyadmin ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 5000:5000 \
-	${USER}-phpmyadmin
+	phpmyadmin
 }
 
 function run_ftps ()
@@ -261,7 +259,7 @@ function run_ftps ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 21:21 -p 20:20 -p 21000-21004:21000-21004 \
-	${USER}-${svc}
+	${svc}
 }
 
 function run_grafana ()
@@ -274,13 +272,13 @@ function run_grafana ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 3000:3000 \
-	${USER}-${svc}
+	${svc}
 }
 
 function run_influxdb ()
 {
 	svc=influxdb;
-	docker run --network=${NETWORK_NAME} --ip=${INFLUX_DB_IP} -d -t \
+	docker run --network=${NETWORK_NAME} --ip=INFLUX_DB_IP${INFLUXDB_DB_IP} -d -t \
 	--name ${svc} \
 	-e WP_IP=${WP_IP}			-e DB_NAME=${DB_NAME} \
 	-e DB_USER=${DB_USER}		-e DB_PASS=${DB_PASS} \
@@ -290,7 +288,7 @@ function run_influxdb ()
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-e INFLUXDB_DB=${INFLUXDB_DB}  -e INFLUXDB_DB_IP=${INFLUXDB_DB_IP} \
 	-p 8086:8086 \
-	${USER}-${svc}
+	${svc}
 }
 
 function run_telegraf ()
@@ -307,7 +305,7 @@ function run_telegraf ()
 	-e INFLUXDB_DB=${INFLUXDB_DB}  -e INFLUXDB_DB_IP=${INFLUXDB_DB_IP} \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-p 8125:8125 \
-	${USER}-${svc}
+	${svc}
 }
 
 function run_containers ()
@@ -316,59 +314,56 @@ function run_containers ()
 	run_wordpress;
 	run_nginx;
 	run_phpmyadmin;
-	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t ${USER}-mysql
-	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t ${USER}-mysql
-	#docker network connect --alias db --alias mysql ${NETWORK_NAME} ${USER}-mysql:latest
-	#docker run --network=${NETWORK_NAME} -p 5050:5050 -d -t  ${USER}-wordpress
-	#docker run --network=${NETWORK_NAME} -p 5000:5000 -d -t  ${USER}-phpmyadmin
-	#docker network connect ${NETWORK_NAME} ${USER}-nginx:latest
-	#docker network connect cluster ${USER}-wordpress:latest
-	#docker network connect cluster ${USER}-phpmyadmin:latest
+	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t mysql
+	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t mysql
+	#docker network connect --alias db --alias mysql ${NETWORK_NAME} mysql:latest
+	#docker run --network=${NETWORK_NAME} -p 5050:5050 -d -t  wordpress
+	#docker run --network=${NETWORK_NAME} -p 5000:5000 -d -t  phpmyadmin
+	#docker network connect ${NETWORK_NAME} nginx:latest
+	#docker network connect cluster wordpress:latest
+	#docker network connect cluster phpmyadmin:latest
 }
 
 apply_metal_LB ()
 {
 	kubectl apply -f "$srcs/config.yaml"
 	kubectl apply -f "$srcs/metallb.yaml"
-	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 apply_kub ()
 {
-	svc=nginx;
-	echo ici
-	kubectl apply -f "${srcs}/${svc}/${svc}.yaml"
+	kubectl apply -f "${srcs}/${services[@]}/${services[@]}\.yaml"
 
 }
 
 function main ()
 {
-	docker kill $(docker p -q);
+	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
 	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	check_minikube;
-	launch_minikube;
+	# check_minikube;
+	# launch_minikube;
 	# build_containers;
-	apply_metal_LB;
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
+	build_ftps;
 	build_nginx;
-	# build_mysql;
-	# build_wordpress;
-	# build_phpmyadmin;
-	# build_ftps;
-	# build_grafana;
-	# build_influxdb;
-	# build_telegraf;
-	# run_influxdb;
-	# run_mysql;
-	# run_telegraf;
-	# run_grafana;
-	# run_ftps;
-	# run_nginx;
-	# run_phpmyadmin;
-	# run_wordpress;
+	build_grafana;
+	build_influxdb;
+	build_telegraf;
+	run_influxdb;
+	run_mysql;
+	run_telegraf;
+	run_grafana;
+	run_ftps;
+	run_nginx;
+	run_phpmyadmin;
+	run_wordpress;
 	#run_containers;
-	apply_kub;
+	#apply_metal_LB;
+	#apply_kub;
 	echo start
 }
 

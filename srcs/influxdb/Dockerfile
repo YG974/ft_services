@@ -12,7 +12,7 @@ ARG		OPENRC_VERSION
 ARG		INFLUXDB_VERSION
 ARG		REPOS='/etc/apk/repositories'
 
-WORKDIR	./
+WORKDIR	/
 
 
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}

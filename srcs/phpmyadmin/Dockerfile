@@ -16,7 +16,7 @@ ARG		OPENRC_VERSION
 
 ENV MYSQL_IP=${MYSQL_IP}
 
-WORKDIR	./
+WORKDIR	/
 
 RUN		apk add --update --no-cache \
 		openrc=${OPENRC_VERSION} \

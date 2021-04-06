@@ -6,7 +6,6 @@
 openrc
 touch /run/openrc/softlevel
 
-
 sed -i "s/database_name_here/$DB_NAME/g" ${WP_CONF};
 sed -i "s/username_here/$DB_USER/g" ${WP_CONF};
 sed -i "s/password_here/$DB_PASS/g" ${WP_CONF};

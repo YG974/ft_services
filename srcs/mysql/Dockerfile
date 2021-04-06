@@ -12,7 +12,7 @@ ARG		MYSQL_VERSION
 ARG		OPENRC_VERSION
 ARG		NGINX_VERSION
 
-WORKDIR	./
+WORKDIR	/
 
 RUN		apk add --update --no-cache \
 		openrc=${OPENRC_VERSION} \

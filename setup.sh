@@ -27,7 +27,9 @@ INFLUXDB_VERSION="1.7.7-r1";
 
 # NETWORK
 NETWORK_NAME="cluster";
-MYSQL_IP="172.18.0.2";
+# MYSQL_IP="172.18.0.2";
+# test kub metal lb ip
+MYSQL_IP="172.17.0.2";
 WP_IP="172.18.0.3";
 PMA_IP="172.18.0.4";
 NGINX_IP="172.18.0.5";
@@ -67,8 +69,8 @@ function launch_minikube ()
 	echo "launch Minikube\n";
 # deleting previous clusters
 minikube delete > /dev/null 2>&1
-# minikube start 
-minikube start --cpus=12
+minikube start --driver='docker' 
+# minikube start --cpus=12
 #minikube addons enable metallb
 minikube addons enable metrics-server
 minikube addons enable dashboard
@@ -323,7 +325,7 @@ function run_containers ()
 	#docker network connect cluster phpmyadmin:latest
 }
 
-apply_metal_LB ()
+function apply_metal_LB ()
 {
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
@@ -334,11 +336,14 @@ apply_metal_LB ()
 	# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
-apply_kub ()
+function apply_kub ()
 {
 	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	sleep 2;
 	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
-	# kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	sleep 2;
+	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	sleep 2;
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 }
 
@@ -347,17 +352,17 @@ function main ()
 	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
-	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	# check_minikube;
-	# launch_minikube;
-	# apply_metal_LB;
-echo "adding minikube docker env\n"
-# eval $(minikube -p minikube docker-env)
-	# build_containers;
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_nginx;
+	launch_minikube;
+	echo "adding minikube docker env\n"
+	apply_metal_LB;
+	(minikube -p minikube docker-env)
+	build_containers;
+	# build_mysql;
+	# build_wordpress;
+	# build_phpmyadmin;
+	# build_nginx;
 	# build_ftps;
 	# build_grafana;
 	# build_influxdb;
@@ -366,12 +371,13 @@ echo "adding minikube docker env\n"
 	# run_telegraf;
 	# run_grafana;
 	# run_ftps;
-	run_mysql;
-	run_nginx;
-	run_phpmyadmin;
-	run_wordpress;
+	# run_mysql;
+	# run_nginx;
+	# run_phpmyadmin;
+	# run_wordpress;
 	#run_containers;
-	# apply_kub;
+	apply_kub;
+	minikube dashboard
 	# echo start
 }
 

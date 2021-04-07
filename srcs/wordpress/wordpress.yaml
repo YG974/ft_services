@@ -6,12 +6,14 @@ metadata:
         metallb.universe.tf/address-pool: ip-pools
   name: wordpress
 spec:
-  ports:
-  - name: http
-    protocol: TCP
-    port: 5050  
-    targetPort: 5050
-  type: LoadBalancer
+    selector:
+        app: wordpress
+    type: LoadBalancer
+    ports:
+        -   name: http
+            protocol: TCP
+            port: 5050
+            targetPort: 5050
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -33,13 +35,13 @@ spec:
         env:
           # Use secret in real usage
         - name: DB_NAME
-          value: $DB_NAME
+          value: wp_db
         - name: DB_USER
-          value: $DB_USER
+          value: user
         - name: DB_PASS
-          value: $DB_PASS
+          value: user
         - name: MYSQL_IP
-          value: $MYSQL_IP
+          value: mysql
         ports:
         - name: http
           containerPort: 5050

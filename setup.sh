@@ -209,7 +209,7 @@ function run_mysql ()
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-e WP_ADMIN=${WP_ADMIN}		-e WP_ADMIN_PASS=${WP_ADMIN_PASS} \
 	-p 3306:3306 \
-	mysql
+	my-mysql
 }
 
 function run_nginx ()
@@ -221,7 +221,7 @@ function run_nginx ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 80:80 -p 443:443 \
-	nginx
+	my-nginx
 }
 
 function run_wordpress ()
@@ -233,7 +233,7 @@ function run_wordpress ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 5050:5050 \
-	wordpress
+	my-wordpress
 }
 
 function run_phpmyadmin ()
@@ -245,7 +245,7 @@ function run_phpmyadmin ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 5000:5000 \
-	phpmyadmin
+	my-phpmyadmin
 }
 
 function run_ftps ()
@@ -258,7 +258,7 @@ function run_ftps ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 21:21 -p 20:20 -p 21000-21004:21000-21004 \
-	${svc}
+	my-${svc}
 }
 
 function run_grafana ()
@@ -271,7 +271,7 @@ function run_grafana ()
 	-e MYSQL_IP=${MYSQL_IP}		-e PMA_IP=${PMA_IP} \
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-p 3000:3000 \
-	${svc}
+	my-${svc}
 }
 
 function run_influxdb ()
@@ -287,7 +287,7 @@ function run_influxdb ()
 	-e NGINX_IP=${NGINX_IP}		-e DOCKER_SUBNET=${DOCKER_SUBNET} \
 	-e INFLUXDB_DB=${INFLUXDB_DB}  -e INFLUXDB_DB_IP=${INFLUXDB_DB_IP} \
 	-p 8086:8086 \
-	${svc}
+	my-${svc}
 }
 
 function run_telegraf ()
@@ -304,7 +304,7 @@ function run_telegraf ()
 	-e INFLUXDB_DB=${INFLUXDB_DB}  -e INFLUXDB_DB_IP=${INFLUXDB_DB_IP} \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-p 8125:8125 \
-	${svc}
+	my-${svc}
 }
 
 function run_containers ()
@@ -336,8 +336,8 @@ apply_metal_LB ()
 
 apply_kub ()
 {
-	# kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
-	# kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
+	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
 	# kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 }
@@ -347,31 +347,31 @@ function main ()
 	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
-	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	# check_minikube;
-	launch_minikube;
-	apply_metal_LB;
+	# launch_minikube;
+	# apply_metal_LB;
 echo "adding minikube docker env\n"
-eval $(minikube -p minikube docker-env)
+# eval $(minikube -p minikube docker-env)
 	# build_containers;
-	# build_mysql;
-	# build_wordpress;
-	# build_phpmyadmin;
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
 	build_nginx;
 	# build_ftps;
 	# build_grafana;
 	# build_influxdb;
 	# build_telegraf;
 	# run_influxdb;
-	# run_mysql;
 	# run_telegraf;
 	# run_grafana;
 	# run_ftps;
-	# run_nginx;
-	# run_phpmyadmin;
-	# run_wordpress;
+	run_mysql;
+	run_nginx;
+	run_phpmyadmin;
+	run_wordpress;
 	#run_containers;
-	apply_kub;
+	# apply_kub;
 	# echo start
 }
 

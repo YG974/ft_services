@@ -18,6 +18,8 @@ RUN		apk add --update --no-cache \
 		openrc=${OPENRC_VERSION} \
 		mysql=${MYSQL_VERSION} \
 		mysql-client=${MYSQL_VERSION}
+		# mariadb=${MYSQL_VERSION} \
+		# mariadb-client=${MYSQL_VERSION}
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
@@ -27,11 +29,11 @@ COPY	entrypoint.sh \
 EXPOSE	3306
 
 # Adding right to scripts
-RUN		chmod +xwr ./entrypoint.sh
-RUN		chmod +rwx ./wordpress_db.sql
+RUN		chmod +x ./entrypoint.sh
+# RUN		chmod +rwx ./wordpress_db.sql
 
 #starting NGINX
-# CMD		["./entrypoint.sh"]
-ENTRYPOINT		["./entrypoint.sh"]
+CMD		["ash", "-c", "./entrypoint.sh"]
+# ENTRYPOINT		["./entrypoint.sh"]
 #ENTRYPOINT ["ash"]
 # mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql

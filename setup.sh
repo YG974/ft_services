@@ -356,13 +356,13 @@ function main ()
 	# check_minikube;
 	launch_minikube;
 	echo "adding minikube docker env\n"
+	eval $(minikube -p minikube docker-env)
 	apply_metal_LB;
-	(minikube -p minikube docker-env)
-	build_containers;
-	# build_mysql;
-	# build_wordpress;
-	# build_phpmyadmin;
-	# build_nginx;
+	# build_containers;
+	build_mysql;
+	build_wordpress;
+	build_phpmyadmin;
+	build_nginx;
 	# build_ftps;
 	# build_grafana;
 	# build_influxdb;
@@ -377,7 +377,7 @@ function main ()
 	# run_wordpress;
 	#run_containers;
 	apply_kub;
-	minikube dashboard
+	minikube dashboard;
 	# echo start
 }
 

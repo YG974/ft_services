@@ -67,14 +67,12 @@ function launch_minikube ()
 	echo "launch Minikube\n";
 # deleting previous clusters
 minikube delete > /dev/null 2>&1
-minikube start 
-# minikube start --driver=docker --cpus=2
+# minikube start 
+minikube start --cpus=12
 #minikube addons enable metallb
 minikube addons enable metrics-server
 minikube addons enable dashboard
 ## add minikube env variables
-echo "adding minikube docker env\n"
-eval $(minikube -p minikube docker-env)
 }
 
 # check the version of minikube
@@ -327,32 +325,38 @@ function run_containers ()
 
 apply_metal_LB ()
 {
-	kubectl apply -f "$srcs/config.yaml"
-	kubectl apply -f "$srcs/metallb.yaml"
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
+	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
+	# On first install only
 	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+	kubectl apply -f "$srcs/config.yaml"
+	# kubectl apply -f "$srcs/metallb.yaml"
+	# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 apply_kub ()
 {
-	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
-	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
-	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	# kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	# kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
+	# kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 }
 
 function main ()
 {
-	# docker kill $(docker ps -q);
-	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
-	# docker network rm ${NETWORK_NAME}
+	docker kill $(docker ps -q);
+	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
+	docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	check_minikube;
+	# check_minikube;
 	launch_minikube;
 	apply_metal_LB;
+echo "adding minikube docker env\n"
+eval $(minikube -p minikube docker-env)
 	# build_containers;
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
+	# build_mysql;
+	# build_wordpress;
+	# build_phpmyadmin;
 	build_nginx;
 	# build_ftps;
 	# build_grafana;
@@ -368,7 +372,7 @@ function main ()
 	# run_wordpress;
 	#run_containers;
 	apply_kub;
-	echo start
+	# echo start
 }
 
 main;

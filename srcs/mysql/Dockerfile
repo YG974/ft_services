@@ -33,7 +33,7 @@ RUN		chmod +x ./entrypoint.sh
 # RUN		chmod +rwx ./wordpress_db.sql
 
 #starting NGINX
-CMD		["ash", "-c", "./entrypoint.sh"]
-# ENTRYPOINT		["./entrypoint.sh"]
+# CMD		["ash", "-c", "./entrypoint.sh"]
+ENTRYPOINT		["./entrypoint.sh"]
 #ENTRYPOINT ["ash"]
 # mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql

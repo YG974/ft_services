@@ -53,18 +53,18 @@ spec:
         - name: WP_ADMIN
           # value: $WP_ADMIN
           value: admin
-        - name: DB_ADMIN_PASS
-          # value: $DB_ADMIN_PASS
-          value: admin
-        - name: MYSQL_ALLOW_EMPTY_PASSWORD
-          # value: $DB_ADMIN_PASS
-          value: 'yes'
-        - name: MYSQL_ROOT_PASSWORD
-          # value: $DB_ADMIN_PASS
-          value: 'root'
-        - name: MYSQL_RANDOM_ROOT_PASSWORD
-          # value: $DB_ADMIN_PASS
-          value: 'yes'
+        # - name: DB_ADMIN_PASS
+        #   # value: $DB_ADMIN_PASS
+        #   value: admin
+        # - name: MYSQL_ALLOW_EMPTY_PASSWORD
+        #   # value: $DB_ADMIN_PASS
+        #   value: 'yes'
+        # - name: MYSQL_ROOT_PASSWORD
+        #   # value: $DB_ADMIN_PASS
+        #   value: 'root'
+        # - name: MYSQL_RANDOM_ROOT_PASSWORD
+        #   # value: $DB_ADMIN_PASS
+        #   value: 'yes'
         ports:
         - containerPort: 3306
           name: mysql

@@ -40,16 +40,8 @@ spec:
         name: influxdb
         imagePullPolicy: Never
         env:
-        - name: INFLUXDB_DB
-          value: telegraf
-        - name: INFLUXDB_ADMIN_USER
-          value: admin
         - name: INFLUXDB_ADMIN_PASS
           value: admin
-        - name: INFLUXDB_USER
-          value: user
-        - name: INFLUXDB_PASS
-          value: user
         ports:
         - containerPort: 8086
           name: influxdb

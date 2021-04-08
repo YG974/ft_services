@@ -69,7 +69,7 @@ function launch_minikube ()
 # deleting previous clusters
 minikube delete > /dev/null 2>&1
 # minikube start 
-minikube start --cpus=12
+minikube start --driver=docker --cpus=12
 #minikube addons enable metallb
 minikube addons enable metrics-server
 minikube addons enable dashboard

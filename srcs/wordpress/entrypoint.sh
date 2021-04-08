@@ -6,8 +6,6 @@
 openrc
 touch /run/openrc/softlevel
 
-# DB_NAME="wp_db";
-# DB_USER="admin";
 # DB_PASS="admin";
 # WP_ADMIN="admin";
 # WP_ADMIN_PASS="admin";

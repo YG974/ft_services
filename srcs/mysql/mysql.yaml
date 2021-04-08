@@ -40,37 +40,19 @@ spec:
         name: mysql
         imagePullPolicy: Never
         env:
-          # Use secret in real usage
         - name: DB_NAME
-          # value: $DB_NAME
           value: wp_db
         - name: DB_USER
-          # value: $DB_USER
           value: user
         - name: DB_PASS
-          # value: $DB_PASS
           value: user
         - name: WP_ADMIN
-          # value: $WP_ADMIN
           value: admin
-        # - name: DB_ADMIN_PASS
-        #   # value: $DB_ADMIN_PASS
-        #   value: admin
-        # - name: MYSQL_ALLOW_EMPTY_PASSWORD
-        #   # value: $DB_ADMIN_PASS
-        #   value: 'yes'
-        # - name: MYSQL_ROOT_PASSWORD
-        #   # value: $DB_ADMIN_PASS
-        #   value: 'root'
-        # - name: MYSQL_RANDOM_ROOT_PASSWORD
-        #   # value: $DB_ADMIN_PASS
-        #   value: 'yes'
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: mysql-pv-volume
-        # mysql-persistent-storage
           mountPath: /var/lib/mysql
         resources:
           requests:
@@ -80,7 +62,6 @@ spec:
             memory: "128Mi"
             cpu: "500m"
       volumes:
-      # - name: mysql-persistent-storage
       - name: mysql-pv-volume
         persistentVolumeClaim:
           claimName: mysql-pv-claim

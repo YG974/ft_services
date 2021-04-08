@@ -36,8 +36,9 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql
-        name: my-mysql
+      - image: my-mysql
+        name: mysql
+        imagePullPolicy: Never
         env:
           # Use secret in real usage
         - name: DB_NAME

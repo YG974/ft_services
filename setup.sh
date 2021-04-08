@@ -7,9 +7,10 @@ services=(				\
 			wordpress	\
 			phpmyadmin	\
 			nginx		\
-			#ftps		\
-			#grafana	\
-			#influxdb	\
+			ftps		\
+			influxdb	\
+			grafana	\
+			telegraf \
 )
 
 # VERSION
@@ -340,6 +341,9 @@ apply_kub ()
 	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
 	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
+	kubectl apply -f "${srcs}/${services[4]}/${services[4]}.yaml"
+	kubectl apply -f "${srcs}/${services[5]}/${services[5]}.yaml"
+	kubectl apply -f "${srcs}/${services[6]}/${services[6]}.yaml"
 }
 
 function main ()
@@ -359,10 +363,10 @@ function main ()
 	build_wordpress;
 	build_phpmyadmin;
 	build_nginx;
-	# build_ftps;
-	# build_grafana;
-	# build_influxdb;
-	# build_telegraf;
+	build_ftps;
+	build_grafana;
+	build_influxdb;
+	build_telegraf;
 	# run_influxdb;
 	# run_telegraf;
 	# run_grafana;

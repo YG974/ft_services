@@ -373,7 +373,7 @@ function main ()
 	# run_wordpress;
 	#run_containers;
 	apply_kub;
-	minikube dashboard
+	# zsh "minikube dashboard";
 	# echo start
 }
 

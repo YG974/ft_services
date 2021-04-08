@@ -26,6 +26,7 @@ RUN		apk add --update --no-cache \
 
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
+		config.inc.php \
 		./
 
 # NGINX
@@ -34,6 +35,7 @@ COPY 	localhost.conf \
 RUN		mkdir -p /run/nginx
 RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
 RUN		rm /etc/nginx/conf.d/default.conf
+RUN 	mv ./config.inc.php /etc/phpmyadmin/config.inc.php
 
 EXPOSE	5000
 

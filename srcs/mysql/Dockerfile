@@ -24,6 +24,7 @@ RUN		apk add --update --no-cache \
 #COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
 		wordpress_db.sql \
+		newmysql.sql \
 		./
 
 EXPOSE	3306

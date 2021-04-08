@@ -1,7 +1,8 @@
 #!/bin/ash
 
 # PhpMyAdmin
-# sed -i "s/\'localhost\'/\'$MYSQL_IP\'/g" /etc/phpmyadmin/config.inc.php
+MYSQL_IP=mysql;
+sed -i "s/\'localhost\'/\'$MYSQL_IP\'/g" /etc/phpmyadmin/config.inc.php
 
 #launching openrc
 openrc

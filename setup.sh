@@ -373,6 +373,7 @@ function main ()
 	# run_wordpress;
 	#run_containers;
 	apply_kub;
+	minikube dashboard
 	# echo start
 }
 

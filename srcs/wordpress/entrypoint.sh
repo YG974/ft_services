@@ -11,7 +11,7 @@ touch /run/openrc/softlevel
 # DB_PASS="admin";
 # WP_ADMIN="admin";
 # WP_ADMIN_PASS="admin";
-# MYSQL_IP=mysql;
+export MYSQL_IP=mysql;
 
 sed -i "s/database_name_here/$DB_NAME/g" ${WP_CONF};
 sed -i "s/username_here/$DB_USER/g" ${WP_CONF};

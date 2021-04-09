@@ -50,11 +50,11 @@ spec:
       - name: ftps
         image: my-ftps
         imagePullPolicy: Never
-        # env:
-        #   - name: FTPS_USER
-        #     value: user
-        #   - name: FTPS_PASS
-        #     value: user
+        env:
+          - name: FTPS_USER
+            value: user
+          - name: FTPS_PASS
+            value: user
         ports:
         - containerPort: 20
         - containerPort: 21

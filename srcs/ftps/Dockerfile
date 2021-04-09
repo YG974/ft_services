@@ -13,7 +13,7 @@ ARG		FTPS_PASS
 WORKDIR	/
 
 RUN		apk add vsftpd=${VSFTPD_VERSION} \
-		# openrc=${OPENRC_VERSION} \
+		openrc=${OPENRC_VERSION} \
 		openssl
 
 # https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04

@@ -3,14 +3,14 @@
 #--------------------------- Variables ----------------------------------------#
 
 services=(				\
+			ftps		\
+			influxdb	\
+			telegraf \
+			grafana	\
 			mysql		\
 			wordpress	\
 			phpmyadmin	\
 			nginx		\
-			ftps		\
-			influxdb	\
-			grafana	\
-			telegraf \
 )
 
 # VERSION
@@ -67,7 +67,7 @@ function launch_minikube ()
 {
 	echo "launch Minikube\n";
 # deleting previous clusters
-minikube delete > /dev/null 2>&1
+# minikube delete > /dev/null 2>&1
 # minikube start 
 minikube start --driver=docker --cpus=12
 #minikube addons enable metallb
@@ -344,6 +344,7 @@ apply_kub ()
 	kubectl apply -f "${srcs}/${services[4]}/${services[4]}.yaml"
 	kubectl apply -f "${srcs}/${services[5]}/${services[5]}.yaml"
 	kubectl apply -f "${srcs}/${services[6]}/${services[6]}.yaml"
+	kubectl apply -f "${srcs}/${services[7]}/${services[7]}.yaml"
 }
 
 function main ()
@@ -377,7 +378,7 @@ function main ()
 	# run_wordpress;
 	#run_containers;
 	apply_kub;
-	# zsh "minikube dashboard";
+	minikube dashboard;
 	# echo start
 }
 

@@ -67,7 +67,7 @@ function launch_minikube ()
 {
 	echo "launch Minikube\n";
 # deleting previous clusters
-# minikube delete > /dev/null 2>&1
+minikube delete > /dev/null 2>&1
 # minikube start 
 minikube start --driver=docker --cpus=12
 #minikube addons enable metallb

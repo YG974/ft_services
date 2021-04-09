@@ -28,10 +28,12 @@ RUN openssl req -x509 \
 
 COPY	entrypoint.sh \
 		vsftpd.conf \
+		success.txt \
 		./
 
 # copy vsftpd setting file in etc
 RUN		mv vsftpd.conf /etc/vsftpd/vsftpd.conf
+RUN		mv success.txt /home/${FTPS_USER}/
 
 # create user, neceserary to login ftps
 RUN		echo -e "$FTPS_PASS\n$FTPS_PASS" | adduser $FTPS_USER

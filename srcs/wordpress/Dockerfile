@@ -22,9 +22,8 @@ RUN		apk add --update --no-cache \
 		php7-fpm=${PHP_VERSION} \
 		php7-mysqli=${PHP_VERSION}
 
-
-#COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		./
 
 # Download wordpress
@@ -34,9 +33,6 @@ ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .
 RUN		tar xzf wordpress-${WP_VERSION}.tar.gz -C /srv/
 RUN		rm wordpress-${WP_VERSION}.tar.gz
 RUN		mv /srv/wordpress/wp-config-sample.php /srv/wordpress/wp-config.php
-
-COPY	entrypoint.sh \
-		./
 
 # NGINX
 COPY 	localhost.conf \
@@ -49,6 +45,7 @@ EXPOSE	5050
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 #starting NGINX
 #ENTRYPOINT ["bin/ash"]

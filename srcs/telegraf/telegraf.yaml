@@ -32,6 +32,12 @@ spec:
       - name: telegraf
         image: my-telegraf
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         ports:
         - name: http
           containerPort: 8125

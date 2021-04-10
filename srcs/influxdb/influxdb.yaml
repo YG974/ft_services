@@ -39,6 +39,12 @@ spec:
       - image: my-influxdb
         name: influxdb
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         env:
         - name: INFLUXDB_ADMIN_PASS
           value: admin

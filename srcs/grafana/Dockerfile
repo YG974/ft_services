@@ -21,6 +21,7 @@ RUN		apk add --update --no-cache \
 
 # copy files from context/OS to container
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		datasources.yaml \
 		dashboard_provider.yaml \
 		dashboard.json \
@@ -40,5 +41,6 @@ EXPOSE	3000
 
 # Add right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 ENTRYPOINT		["./entrypoint.sh"]

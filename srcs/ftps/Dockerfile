@@ -28,6 +28,7 @@ RUN openssl req -x509 \
 
 COPY	entrypoint.sh \
 		vsftpd.conf \
+		livenessprobe.sh \
 		success.txt \
 		./
 
@@ -46,6 +47,7 @@ EXPOSE	21 20 21000-21004
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 CMD		["./entrypoint.sh"]
 # ENTRYPOINT		["./entrypoint.sh"]

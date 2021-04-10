@@ -23,6 +23,7 @@ RUN		apk add --update --no-cache \
 # copy files from context/OS to container
 COPY	entrypoint.sh \
 		localhost.conf \
+		livenessprobe.sh \
 		config.inc.php \
 		./
 
@@ -39,6 +40,7 @@ EXPOSE	5000
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 # CMD		["./entrypoint.sh"]
 ENTRYPOINT ["./entrypoint.sh"]

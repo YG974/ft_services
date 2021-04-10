@@ -19,6 +19,7 @@ RUN		apk add --update --no-cache \
 		telegraf=${TELEGRAF_VERSION} 
 
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		telegraf.conf \
 		./
 
@@ -28,6 +29,7 @@ EXPOSE	8125
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 # CMD		["./entrypoint.sh"]
 ENTRYPOINT ["./entrypoint.sh"]

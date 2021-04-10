@@ -39,6 +39,12 @@ spec:
       - image: my-mysql
         name: mysql
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         env:
         - name: DB_NAME
           value: wp_db

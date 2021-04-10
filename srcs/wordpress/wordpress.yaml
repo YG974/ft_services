@@ -32,8 +32,13 @@ spec:
       - name: wordpress
         image: my-wordpress
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         env:
-          # Use secret in real usage
         - name: DB_NAME
           value: wp_db
         - name: DB_USER

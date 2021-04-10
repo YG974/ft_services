@@ -50,6 +50,12 @@ spec:
       - name: ftps
         image: my-ftps
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         env:
           - name: FTPS_USER
             value: user

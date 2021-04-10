@@ -17,6 +17,7 @@ RUN		apk add --update --no-cache \
 		mysql-client=${MYSQL_VERSION}
 
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		wordpress_db.sql \
 		./
 
@@ -24,5 +25,6 @@ EXPOSE	3306
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 ENTRYPOINT		["./entrypoint.sh"]

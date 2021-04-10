@@ -5,8 +5,8 @@
 services=(				\
 			ftps		\
 			influxdb	\
-			telegraf \
-			grafana	\
+			telegraf	\
+			grafana		\
 			mysql		\
 			wordpress	\
 			phpmyadmin	\
@@ -66,14 +66,15 @@ minikube_version="v1.9.0"
 function launch_minikube ()
 {
 	echo "launch Minikube\n";
-# deleting previous clusters
-minikube delete > /dev/null 2>&1
-# minikube start 
-minikube start --driver=docker --cpus=12
-#minikube addons enable metallb
-minikube addons enable metrics-server
-minikube addons enable dashboard
-## add minikube env variables
+	# deleting previous clusters
+	minikube delete > /dev/null 2>&1
+	# minikube start 
+	minikube start --driver=docker --cpus=12
+	#minikube addons enable metallb
+	minikube addons enable metrics-server
+	minikube addons enable dashboard
+	echo "adding minikube docker env\n"
+	eval $(minikube -p minikube docker-env)
 }
 
 # check the version of minikube
@@ -190,15 +191,11 @@ function build_containers ()
 	build_wordpress;
 	build_phpmyadmin;
 	build_nginx;
-	#for service in services "${services[@]}"
-	#do
-		#echo "building ${services[@]}\n"
-		#docker build -t ${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
-	#done
+	build_ftps;
+	build_influxdb;
+	build_telegraf;
+	build_grafana;
 }
-
-
-# DATABASE USERS INFO
 
 function run_mysql ()
 {
@@ -314,25 +311,18 @@ function run_containers ()
 	run_wordpress;
 	run_nginx;
 	run_phpmyadmin;
-	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t mysql
-	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t mysql
-	#docker network connect --alias db --alias mysql ${NETWORK_NAME} mysql:latest
-	#docker run --network=${NETWORK_NAME} -p 5050:5050 -d -t  wordpress
-	#docker run --network=${NETWORK_NAME} -p 5000:5000 -d -t  phpmyadmin
-	#docker network connect ${NETWORK_NAME} nginx:latest
-	#docker network connect cluster wordpress:latest
-	#docker network connect cluster phpmyadmin:latest
+	run_ftps;
+	run_influxdb;
+	run_telegraf;
+	run_grafana;
 }
 
 apply_metal_LB ()
 {
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
-	# On first install only
 	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 	kubectl apply -f "$srcs/config.yaml"
-	# kubectl apply -f "$srcs/metallb.yaml"
-	# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 apply_kub ()
@@ -356,9 +346,6 @@ function main ()
 	# check_minikube;
 	launch_minikube;
 	apply_metal_LB;
-	echo "adding minikube docker env\n"
-	eval $(minikube -p minikube docker-env)
-	
 	# build_containers;
 	build_mysql;
 	build_wordpress;

@@ -11,7 +11,7 @@ ARG		REPOS='/etc/apk/repositories'
 
 WORKDIR	/
 
-
+# updating apk repos to be able to find grafana
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
 
@@ -31,5 +31,4 @@ EXPOSE	8125
 RUN		chmod +x ./entrypoint.sh
 RUN		chmod +x ./livenessprobe.sh
 
-# CMD		["./entrypoint.sh"]
 ENTRYPOINT ["./entrypoint.sh"]

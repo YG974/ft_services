@@ -59,11 +59,10 @@ srcs=./srcs
 function launch_minikube ()
 {
 	echo "launch Minikube\n";
-	# deleting previous clusters
-	minikube delete > /dev/null 2>&1
-	# minikube start 
+	echo 'remove previous minikube clusters'
+	minikube delete #> /dev/null 2>&1
+	echo 'starting minikube'
 	minikube start --driver=docker --cpus=12
-	#minikube addons enable metallb
 	minikube addons enable metrics-server
 	minikube addons enable dashboard
 	echo "adding minikube docker env\n"
@@ -75,12 +74,14 @@ function check_minikube ()
 	# check the version of minikube
 	# if version 1.9 is installed, go to next step
 	# if version 1.9 is not installed, remove the existing version, and install 1.9
+	echo 'checking minikube version'
 	minikube version | grep "$MINIKUBE_VERSION"
 	if [ "$?" == 0 ]
 	then
 		echo good version
 	else
 		echo bad
+		#sudo apt delete minikube
 		#sudo apt install minikube=1.9.0
 	fi
 }
@@ -100,7 +101,6 @@ function build_mysql ()
 	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg MYSQL_VERSION=${MYSQL_VERSION} \
-	--build-arg NGINX_VERSION=${NGINX_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
@@ -148,8 +148,6 @@ function build_grafana ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg GRAFANA_VERSION=${GRAFANA_VERSION} \
-	--build-arg	FTPS_USER=${FTPS_USER} \
-	--build-arg	FTPS_PASS=${FTPS_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -160,10 +158,6 @@ function build_influxdb ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg INFLUXDB_VERSION=${INFLUXDB_VERSION} \
-	--build-arg INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
-	--build-arg INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
-	--build-arg INFLUXDB_USER=${INFLUXDB_USER} \
-	--build-arg INFLUXDB_PASS=${INFLUXDB_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -363,89 +357,55 @@ function print_user_info ()
 	echo "  - ${INFLUXDB_ADMIN_USER}:${INFLUXDB_ADMIN_PASS}";
 }
 
-function main ()
+function kill_docker ()
 {
 	# docker kill $(docker ps -q);
 	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	# docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	echo ok
+}
+
+function main ()
+{
 	# check_minikube;
 	# launch_minikube;
 	# apply_metal_LB;
 	# build_containers;
 	#run_containers;
 	# apply_kub;
+	# echo 'installing filezilla to test ftps server'
+	# sudo apt install filezilla;
 	print_user_info;
 	# minikube dashboard;
+	exit;
 }
-
-main;
-exit;
-
 #--------------------------- Checking dependences------------------------------#
-
-function VM_settings ()
+function check_VM_settings ()
 {
-echo "-----------------------------------------------------------------------\n"
-echo "			Welcome to Ft_Services\n"
-echo "-----------------------------------------------------------------------\n"
-echo "WARNING : you need to run this project on 42VM AND :\n"
-echo "-Your VM need at least 2 CPU's to run Minikube\n"
-echo "-Your VM need to give sudo rights to Docker to run it properly\n"
-echo "if you don't fullfil theses 2 requierements :"
-echo "1- Select \"No\""
-echo "2- Give sudo rights to Docker: sudo usermod -aG docker \$(whoami)"
-echo "3- Exit the VM"
-echo "4- Set 2 CPU for the VM"
-echo "5- Restart the VM to apply changes and then relaunch setup.sh\n"
-echo "-----------------------------------------------------------------------\n"
-echo "Do you fulfil theses requierments ?\n"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) main;;
-        No ) exit;;
-    esac
-done
+	echo "-----------------------------------------------------------------------\n"
+	echo "			Welcome to Ft_Services\n"
+	echo "-----------------------------------------------------------------------\n"
+	echo "WARNING : you need to run this project on 42VM AND :"
+	echo "-Your VM need at least 2 CPU's to run Minikube"
+	echo "-Your VM need to give sudo rights to Docker to run it properly"
+	echo "-Nginx service is not running"
+	echo "if you don't fullfil theses 3 requierements :"
+	echo "1- Select \"No\""
+	echo "2- Give sudo rights to Docker: sudo usermod -aG docker $(whoami)"
+	echo "3- Exit the VM"
+	echo "4- Set 2 CPU for the VM"
+	echo "5- Restart the VM to apply changes and then relaunch setup.sh"
+	echo "6- Stop nginx service"
+	echo "-----------------------------------------------------------------------"
+	echo "Do you fulfil theses requierments ?"
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes ) main;;
+			No ) exit;;
+		esac
+	done
+	exit;
 }
 
-
-#--------------------------- Building contenairs ------------------------------#
-# if minikube is no running, start minikube
-#if ! minikube status > /dev/null 2>&1
-	#then
-		#minikube start --driver=docker --cpus=2
-		#minikube addons enable metallb
-		#minikube addons enable metrics-server
-		#minikube addons enable dashboard
-#fi
-
-## add minikube env variables
-#echo "adding minikube docker env\n"
-#eval $(minikube -p minikube docker-env)
-#minikube addons configure metallb eval $(minikube docker-env)
-
-# How to install metallb => https://metallb.universe.tf/installation/
-# enable strict ARP mode to use kube-proxy
-# 1- see what changes would be made, returns nonzero returncode if different
-#kubectl get configmap kube-proxy -n kube-system -o yaml | \
-#sed -e "s/strictARP: false/strictARP: true/" | \
-#kubectl diff -f - -n kube-system
-# 2- actually apply the changes, returns nonzero returncode on errors only
-#kubectl get configmap kube-proxy -n kube-system -o yaml | \
-#sed -e "s/strictARP: false/strictARP: true/" | \
-#kubectl apply -f - -n kube-system
-
-# templates for metallb v0.9.3 download at :
-# https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-# https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-#kubectl apply -f "$srcs/config.yaml"
-#kubectl apply -f "$srcs/metallb.yaml"
-# On first install only
-
-
-#for service in services "${services[@]}"
-#docker build -t "$USER-nginx" -f "$srcs/nginx/Dockerfile" srcs/nginx
-#kubectl apply -f srcs/nginx/nginx.yaml
-#kubectl apply -f srcs/nginx/nginx.yaml
-
-
+check_VM_settings;

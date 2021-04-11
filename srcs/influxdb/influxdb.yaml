@@ -54,13 +54,6 @@ spec:
         volumeMounts:
         - name: influxdb-pv-volume
           mountPath: /var/lib/influxdb
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
       volumes:
       - name: influxdb-pv-volume
         persistentVolumeClaim:

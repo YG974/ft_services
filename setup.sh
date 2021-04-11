@@ -62,7 +62,7 @@ function launch_minikube ()
 	echo 'remove previous minikube clusters'
 	minikube delete #> /dev/null 2>&1
 	echo 'starting minikube'
-	minikube start --driver=docker --cpus=12
+	minikube start --driver=docker
 	minikube addons enable metrics-server
 	minikube addons enable dashboard
 	echo "adding minikube docker env\n"
@@ -394,16 +394,16 @@ function main ()
 			Yes ) ;;
 			No ) exit;;
 		esac
-	# check_minikube;
-	# launch_minikube;
-	# apply_metal_LB;
+	check_minikube;
+	launch_minikube;
+	apply_metal_LB;
 	build_containers;
 	#run_containers;
-	# apply_kub;
-	# echo 'installing filezilla to test ftps server'
-	# sudo apt install filezilla;
+	apply_kub;
+	echo 'installing filezilla to test ftps server'
+	sudo apt install filezilla;
 	print_user_info;
-	# minikube dashboard;
+	minikube dashboard;
 	exit;
 	done
 }

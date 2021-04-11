@@ -56,11 +56,11 @@ spec:
             - ./livenessprobe.sh
           initialDelaySeconds: 10
           periodSeconds: 10
-        env:
-          - name: FTPS_USER
-            value: user
-          - name: FTPS_PASS
-            value: user
+        # env:
+        #   - name: FTPS_USER
+        #     value: user
+        #   - name: FTPS_PASS
+        #     value: user
         ports:
         - containerPort: 20
         - containerPort: 21

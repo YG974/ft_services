@@ -1,0 +1,38 @@
+Sending build context to Docker daemon  8.192kB
+Sending build context to Docker daemon  8.192kB
+Sending build context to Docker daemon  8.192kB
+Step 1/23 : ARG		ALPINE_VERSION
+Step 2/23 : FROM	alpine:$ALPINE_VERSION
+ ---> 44dc5a8658dc
+Step 3/23 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
+ ---> Using cache
+ ---> f94be17582ed
+Step 4/23 : ARG		WP_VERSION
+ ---> Using cache
+ ---> 5826f61d9d61
+Step 5/23 : ARG		PHP_VERSION
+ ---> Using cache
+ ---> 8a82ab509025
+Step 6/23 : ARG		NGINX_VERSION
+ ---> Using cache
+ ---> 4caf59fd17e2
+Step 7/23 : ARG		OPENRC_VERSION
+ ---> Using cache
+ ---> 144c892ab389
+Step 8/23 : ENV WP_CONF="/srv/wordpress/wp-config.php"
+ ---> Using cache
+ ---> 80f36035bbbe
+Step 9/23 : WORKDIR	/
+ ---> Using cache
+ ---> 77595c071122
+Step 10/23 : RUN		apk add --update --no-cache 		nginx=${NGINX_VERSION} 		openrc=${OPENRC_VERSION} 		php7=${PHP_VERSION} 		php7-json=${PHP_VERSION} 		php7-fpm=${PHP_VERSION} 		php7-mysqli=${PHP_VERSION}
+ ---> Using cache
+ ---> 44ea54b87289
+Step 11/23 : COPY	entrypoint.sh 		livenessprobe.sh 		./
+ ---> 951a1241c75f
+Step 12/23 : ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .
+
+
+ ---> dd47f67f6eb2
+Step 13/23 : RUN		tar xzf wordpress-${WP_VERSION}.tar.gz -C /srv/
+ ---> Running in aeaa1128256f

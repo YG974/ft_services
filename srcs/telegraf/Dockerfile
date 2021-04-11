@@ -5,7 +5,6 @@ FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
-ARG		OPENRC_VERSION
 ARG		TELEGRAF_VERSION
 ARG		REPOS='/etc/apk/repositories'
 

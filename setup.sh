@@ -25,6 +25,7 @@ VSFTPD_VERSION="3.0.3-r6";
 GRAFANA_VERSION="7.3.6-r0";
 TELEGRAF_VERSION="1.17.0-r0";
 INFLUXDB_VERSION="1.7.7-r1";
+OPENSSL_VERSION="";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -60,7 +61,6 @@ INFLUXDB_PASS="user";
 
 srcs=./srcs
 
-metallb_version="v0.9.3"
 minikube_version="v1.9.0"
 
 function launch_minikube ()
@@ -187,14 +187,33 @@ function build_telegraf ()
 
 function build_containers ()
 {
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_nginx;
-	build_ftps;
-	build_influxdb;
-	build_telegraf;
-	build_grafana;
+	echo 'Building containers, building logs located in \'build_log.log\' file;
+	echo 'Building MYSQL';
+	echo 'MYSQL log' > build_log.log;
+	build_mysql >> build_log.log;
+	echo 'Building WORDPRESS';
+	echo 'WORDPRESS log' >> build_log.log;
+	build_wordpress >> build_log.log;
+	echo 'Building PHPMYADMIN';
+	echo 'PHPMYADMIN log' >> build_log.log;
+	build_phpmyadmin >> build_log.log;
+	echo 'Building NGINX';
+	echo 'NGINX log' >> build_log.log;
+	build_nginx >> build_log.log;
+	echo 'Building FTPS';
+	echo 'FTPS log' >> build_log.log;
+	build_ftps >> build_log.log;
+	echo 'Building INFLUXDB';
+	echo 'INFLUXDB log' >> build_log.log;
+	build_influxdb >> build_log.log;
+	echo 'Building TELEGRAF';
+	echo 'TELEGRAF log' >> build_log.log;
+	build_telegraf >> build_log.log;
+	echo 'Building GRAFANA';
+	echo 'GRAFANA log' >> build_log.log;
+	build_grafana >> build_log.log;
+	echo 'All containers built';
+	grep "Successfully tagged" build_log.log;
 }
 
 function run_mysql ()
@@ -344,29 +363,12 @@ function main ()
 	# docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 	# check_minikube;
-	launch_minikube;
-	apply_metal_LB;
-	# build_containers;
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_nginx;
-	build_ftps;
-	build_grafana;
-	build_influxdb;
-	build_telegraf;
-	# run_influxdb;
-	# run_telegraf;
-	# run_grafana;
-	# run_ftps;
-	# run_mysql;
-	# run_nginx;
-	# run_phpmyadmin;
-	# run_wordpress;
+	# launch_minikube;
+	# apply_metal_LB;
+	build_containers;
 	#run_containers;
-	apply_kub;
-	minikube dashboard;
-	# echo start
+	# apply_kub;
+	# minikube dashboard;
 }
 
 main;

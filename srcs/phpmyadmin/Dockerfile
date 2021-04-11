@@ -10,8 +10,6 @@ ARG		PMA_VERSION
 ARG		NGINX_VERSION
 ARG		OPENRC_VERSION
 
-ENV MYSQL_IP=${MYSQL_IP}
-
 WORKDIR	/
 
 RUN		apk add --update --no-cache \

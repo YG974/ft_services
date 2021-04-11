@@ -14,6 +14,7 @@ services=(				\
 )
 
 # VERSION
+MINIKUBE_VERSION="v1.9.0"
 ALPINE_VERSION="3.11";
 OPENRC_VERSION="0.42.1-r2";
 NGINX_VERSION="1.16.1-r6";
@@ -40,28 +41,20 @@ GRAFANA_IP="172.18.0.9";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # USERS INFO
-
 DB_NAME="wp_db";
 DB_USER="user";
 DB_PASS="user";
 WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
-
-# FTPS settings
-FTPS_USER="ftp_user";
-FTPS_PASS="ftp_pass";	
-
-# INFLUXDB settings
+FTPS_USER="user";
+FTPS_PASS="user";	
 INFLUXDB_DB="telegraf";
 INFLUXDB_ADMIN_USER="admin";
 INFLUXDB_ADMIN_PASS="admin";
 INFLUXDB_USER="user";
 INFLUXDB_PASS="user";
 
-
 srcs=./srcs
-
-minikube_version="v1.9.0"
 
 function launch_minikube ()
 {
@@ -77,13 +70,12 @@ function launch_minikube ()
 	eval $(minikube -p minikube docker-env)
 }
 
-# check the version of minikube
-# if version 1.9 is installed, go to next step
-# if version 1.9 is not installed, remove the existing version, and install 1.9
-
 function check_minikube ()
 {
-	minikube version | grep "$minikube_version"
+	# check the version of minikube
+	# if version 1.9 is installed, go to next step
+	# if version 1.9 is not installed, remove the existing version, and install 1.9
+	minikube version | grep "$MINIKUBE_VERSION"
 	if [ "$?" == 0 ]
 	then
 		echo good version
@@ -336,7 +328,7 @@ function run_containers ()
 	run_grafana;
 }
 
-apply_metal_LB ()
+function apply_metal_LB ()
 {
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
@@ -344,7 +336,7 @@ apply_metal_LB ()
 	kubectl apply -f "$srcs/config.yaml"
 }
 
-apply_kub ()
+function apply_kub ()
 {
 	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
 	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
@@ -356,6 +348,21 @@ apply_kub ()
 	kubectl apply -f "${srcs}/${services[7]}/${services[7]}.yaml"
 }
 
+function print_user_info ()
+{
+	echo "WORDPRESS accounts:";
+	echo "  - ${WP_ADMIN}:${WP_ADMIN_PASS}";
+	echo "  - ${DB_USER}:${DB_PASS}";
+	echo "PHPMYADMIN accounts:";
+	echo "  - ${WP_ADMIN}:${WP_ADMIN_PASS}";
+	echo "  - ${DB_USER}:${DB_PASS}";
+	echo "FTPS account:";
+	echo "  - ${FTPS_USER}:${FTPS_PASS}";
+	echo "GRAFFNA accounts:";
+	echo "  - ${INFLUXDB_USER}:${INFLUXDB_PASS}";
+	echo "  - ${INFLUXDB_ADMIN_USER}:${INFLUXDB_ADMIN_PASS}";
+}
+
 function main ()
 {
 	# docker kill $(docker ps -q);
@@ -365,9 +372,10 @@ function main ()
 	# check_minikube;
 	# launch_minikube;
 	# apply_metal_LB;
-	build_containers;
+	# build_containers;
 	#run_containers;
 	# apply_kub;
+	print_user_info;
 	# minikube dashboard;
 }
 

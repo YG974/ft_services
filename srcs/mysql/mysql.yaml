@@ -54,6 +54,8 @@ spec:
           value: user
         - name: WP_ADMIN
           value: admin
+        - name: WP_ADMIN_PASS
+          value: admin
         ports:
         - containerPort: 3306
           name: mysql

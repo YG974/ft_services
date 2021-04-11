@@ -366,21 +366,6 @@ function kill_docker ()
 	echo ok
 }
 
-function main ()
-{
-	# check_minikube;
-	# launch_minikube;
-	# apply_metal_LB;
-	# build_containers;
-	#run_containers;
-	# apply_kub;
-	# echo 'installing filezilla to test ftps server'
-	# sudo apt install filezilla;
-	print_user_info;
-	# minikube dashboard;
-	exit;
-}
-#--------------------------- Checking dependences------------------------------#
 function check_VM_settings ()
 {
 	echo "-----------------------------------------------------------------------\n"
@@ -399,13 +384,28 @@ function check_VM_settings ()
 	echo "6- Stop nginx service"
 	echo "-----------------------------------------------------------------------"
 	echo "Do you fulfil theses requierments ?"
-	select yn in "Yes" "No"; do
-		case $yn in
-			Yes ) main;;
-			No ) exit;;
-		esac
-	done
-	exit;
 }
 
-check_VM_settings;
+function main ()
+{
+	check_VM_settings;
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes ) ;;
+			No ) exit;;
+		esac
+	# check_minikube;
+	# launch_minikube;
+	# apply_metal_LB;
+	build_containers;
+	#run_containers;
+	# apply_kub;
+	# echo 'installing filezilla to test ftps server'
+	# sudo apt install filezilla;
+	print_user_info;
+	# minikube dashboard;
+	exit;
+	done
+}
+
+main;

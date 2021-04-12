@@ -176,7 +176,7 @@ function build_telegraf ()
 
 function build_containers ()
 {
-	echo 'Building containers, building logs located in \'build_log.log\' file;
+	echo 'Building containers, building logs located in "build_log.log" file';
 	echo 'Building MYSQL';
 	echo 'MYSQL log' > build_log.log;
 	build_mysql >> build_log.log;
@@ -389,13 +389,20 @@ function check_VM_settings ()
 	echo "Do you fulfil theses requierments ?"
 }
 
+function set_vm ()
+{
+	sudo usermod -aG docker $(whoami);
+	service nginx stop;
+	exit;
+}
+
 function main ()
 {
 	check_VM_settings;
 	select yn in "Yes" "No"; do
 		case $yn in
 			Yes ) ;;
-			No ) exit;;
+			No ) set_vm;;
 		esac
 	check_minikube;
 	launch_minikube;

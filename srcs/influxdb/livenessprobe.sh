@@ -1,5 +1,5 @@
 #!/bin/ash
 
-mysql << EOF
+influx << EOF
 SHOW DATABASES;
 EOF

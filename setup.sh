@@ -80,7 +80,7 @@ function check_minikube ()
 	then
 		echo good version
 	else
-		echo bad
+		echo 'bad version please install minikube 1.9 cf setup.sh line 84'
 		# curl -Lo minikube https://storage.googleapis.com/minikube/releases/1.9.0/minikube-linux-amd64   && chmod +x minikube
 		# sudo mkdir -p /usr/local/bin/
 # sudo install minikube /usr/local/bin/
@@ -404,14 +404,14 @@ function main ()
 			Yes ) ;;
 			No ) set_vm;;
 		esac
+	echo 'installing filezilla to test ftps server'
+	sudo apt install filezilla;
 	check_minikube;
 	launch_minikube;
 	apply_metal_LB;
 	build_containers;
 	#run_containers;
 	apply_kub;
-	echo 'installing filezilla to test ftps server'
-	sudo apt install filezilla;
 	print_user_info;
 	minikube dashboard;
 	exit;

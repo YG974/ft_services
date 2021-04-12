@@ -4,37 +4,33 @@ metadata:
   annotations:
         metallb.universe.tf/allow-shared-ip: shared
         metallb.universe.tf/address-pool: ip-pools
-  name: nginx
+  name: telegraf
 spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  selector:
-    app: nginx
-  type: LoadBalancer
+    selector:
+        app: telegraf
+    type: ClusterIP
+    ports:
+        -   name: http
+            protocol: TCP
+            port: 8125
+            targetPort: 8125
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: telegraf
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: telegraf
   template:
     metadata:
       labels:
-        app: nginx
+        app: telegraf
     spec:
       containers:
-      - name: nginx
-        image: my-nginx
+      - name: telegraf
+        image: my-telegraf
         imagePullPolicy: Never
         livenessProbe:
           exec:
@@ -44,6 +40,11 @@ spec:
           periodSeconds: 10
         ports:
         - name: http
-          containerPort: 80
-        - name: https
-          containerPort: 443
+          containerPort: 8125
+        volumeMounts:
+          - name: telegraf-endpoint
+            mountPath: "/var/run/docker.sock"
+      volumes:
+      - name: telegraf-endpoint
+        hostPath:
+          path: /var/run/docker.sock

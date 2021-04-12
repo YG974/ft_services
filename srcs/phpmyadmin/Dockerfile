@@ -1,20 +1,14 @@
 # PMA
 
-#ARG		ALPINE_VERSION=3.11
 ARG		ALPINE_VERSION
 FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
-#ARG		PMA_VERSION=4.9.5-r0
-#ARG		OPENRC_VERSION=0.42.1-r2
-#ARG		NGINX_VERSION=1.16.1-r6
 ARG		PHP_VERSION
 ARG		PMA_VERSION
 ARG		NGINX_VERSION
 ARG		OPENRC_VERSION
-
-ENV MYSQL_IP=${MYSQL_IP}
 
 WORKDIR	/
 
@@ -24,21 +18,27 @@ RUN		apk add --update --no-cache \
 		php7-fpm=${PHP_VERSION} \
 		nginx=${NGINX_VERSION}
 
-#COPY --chown=$USER entrypoint.sh \
+# copy files from context/OS to container
 COPY	entrypoint.sh \
+		localhost.conf \
+		livenessprobe.sh \
+		config.inc.php \
 		./
 
-# NGINX
-COPY 	localhost.conf \
-		./
+# creating required directory to run nginx
 RUN		mkdir -p /run/nginx
+
+
+# move settings files
 RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
 RUN		rm /etc/nginx/conf.d/default.conf
+RUN 	mv ./config.inc.php /etc/phpmyadmin/config.inc.php
 
 EXPOSE	5000
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 # CMD		["./entrypoint.sh"]
 ENTRYPOINT ["./entrypoint.sh"]

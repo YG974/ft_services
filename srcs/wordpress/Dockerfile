@@ -1,20 +1,15 @@
 # WORDPRESS
 
-#ARG		ALPINE_VERSION=3.11
 ARG		ALPINE_VERSION
 FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
-#ARG		WP_VERSION=5.7
-#ARG		PHP_VERSION=7.3.22-r0
-#ARG		NGINX_VERSION=1.16.1-r6
 ARG		WP_VERSION
 ARG		PHP_VERSION
 ARG		NGINX_VERSION
 ARG		OPENRC_VERSION
 
-#ENV MYSQL_IP=${MYSQL_IP}
 ENV WP_CONF="/srv/wordpress/wp-config.php"
 
 WORKDIR	/
@@ -27,9 +22,8 @@ RUN		apk add --update --no-cache \
 		php7-fpm=${PHP_VERSION} \
 		php7-mysqli=${PHP_VERSION}
 
-
-#COPY --chown=$USER entrypoint.sh \
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		./
 
 # Download wordpress
@@ -39,9 +33,6 @@ ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .
 RUN		tar xzf wordpress-${WP_VERSION}.tar.gz -C /srv/
 RUN		rm wordpress-${WP_VERSION}.tar.gz
 RUN		mv /srv/wordpress/wp-config-sample.php /srv/wordpress/wp-config.php
-
-COPY	entrypoint.sh \
-		./
 
 # NGINX
 COPY 	localhost.conf \
@@ -54,6 +45,7 @@ EXPOSE	5050
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 #starting NGINX
 #ENTRYPOINT ["bin/ash"]

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim
+  name: influxdb-pv-claim
 spec:
   accessModes:
     - ReadWriteOnce
@@ -12,32 +12,32 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: influxdb
 spec:
   selector:
-    app: mysql
+    app: influxdb
   type: ClusterIP
   ports:
-  - port: 3306
+  - port: 8086
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: influxdb
 spec:
   selector:
     matchLabels:
-      app: mysql
+      app: influxdb
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app: influxdb
     spec:
       containers:
-      - image: my-mysql
-        name: mysql
+      - image: my-influxdb
+        name: influxdb
         imagePullPolicy: Never
         livenessProbe:
           exec:
@@ -46,23 +46,15 @@ spec:
           initialDelaySeconds: 10
           periodSeconds: 10
         env:
-        - name: DB_NAME
-          value: wp_db
-        - name: DB_USER
-          value: user
-        - name: DB_PASS
-          value: user
-        - name: WP_ADMIN
-          value: admin
-        - name: WP_ADMIN_PASS
+        - name: INFLUXDB_ADMIN_PASS
           value: admin
         ports:
-        - containerPort: 3306
-          name: mysql
+        - containerPort: 8086
+          name: influxdb
         volumeMounts:
-        - name: mysql-pv-volume
-          mountPath: /var/lib/mysql
+        - name: influxdb-pv-volume
+          mountPath: /var/lib/influxdb
       volumes:
-      - name: mysql-pv-volume
+      - name: influxdb-pv-volume
         persistentVolumeClaim:
-          claimName: mysql-pv-claim
+          claimName: influxdb-pv-claim

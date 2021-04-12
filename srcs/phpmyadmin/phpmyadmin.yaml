@@ -29,16 +29,15 @@ spec:
         app: phpmyadmin
     spec:
       containers:
-      - name: phpmyadmin
-        image: my-phpmyadmin
+      - image: my-phpmyadmin
+        name: phpmyadmin
         imagePullPolicy: Never
+        livenessProbe:
+          exec:
+            command:
+            - ./livenessprobe.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         ports:
         - name: http
           containerPort: 5000
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"

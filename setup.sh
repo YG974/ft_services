@@ -3,16 +3,18 @@
 #--------------------------- Variables ----------------------------------------#
 
 services=(				\
+			ftps		\
+			influxdb	\
+			telegraf	\
+			grafana		\
 			mysql		\
 			wordpress	\
 			phpmyadmin	\
 			nginx		\
-			#ftps		\
-			#grafana	\
-			#influxdb	\
 )
 
 # VERSION
+MINIKUBE_VERSION="v1.9.0"
 ALPINE_VERSION="3.11";
 OPENRC_VERSION="0.42.1-r2";
 NGINX_VERSION="1.16.1-r6";
@@ -24,6 +26,7 @@ VSFTPD_VERSION="3.0.3-r6";
 GRAFANA_VERSION="7.3.6-r0";
 TELEGRAF_VERSION="1.17.0-r0";
 INFLUXDB_VERSION="1.7.7-r1";
+OPENSSL_VERSION="";
 
 # NETWORK
 NETWORK_NAME="cluster";
@@ -40,29 +43,20 @@ GRAFANA_IP="172.18.0.9";
 DOCKER_SUBNET="172.18.0.0/16";
 
 # USERS INFO
-
 DB_NAME="wp_db";
 DB_USER="user";
 DB_PASS="user";
 WP_ADMIN="admin";
 WP_ADMIN_PASS="admin";
-
-# FTPS settings
-FTPS_USER="ftp_user";
-FTPS_PASS="ftp_pass";	
-
-# INFLUXDB settings
+FTPS_USER="user";
+FTPS_PASS="user";	
 INFLUXDB_DB="telegraf";
 INFLUXDB_ADMIN_USER="admin";
 INFLUXDB_ADMIN_PASS="admin";
 INFLUXDB_USER="user";
 INFLUXDB_PASS="user";
 
-
 srcs=./srcs
-
-metallb_version="v0.9.3"
-minikube_version="v1.9.0"
 
 function launch_minikube ()
 {
@@ -77,18 +71,22 @@ minikube addons enable dashboard
 ## add minikube env variables
 }
 
-# check the version of minikube
-# if version 1.9 is installed, go to next step
-# if version 1.9 is not installed, remove the existing version, and install 1.9
-
 function check_minikube ()
 {
-	minikube version | grep "$minikube_version"
+	# check the version of minikube
+	# if version 1.9 is installed, go to next step
+	# if version 1.9 is not installed, remove the existing version, and install 1.9
+	echo 'checking minikube version'
+	minikube version | grep "$MINIKUBE_VERSION"
 	if [ "$?" == 0 ]
 	then
 		echo good version
 	else
 		echo bad
+		# curl -Lo minikube https://storage.googleapis.com/minikube/releases/1.9.0/minikube-linux-amd64   && chmod +x minikube
+		# sudo mkdir -p /usr/local/bin/
+# sudo install minikube /usr/local/bin/
+		#sudo apt delete minikube
 		#sudo apt install minikube=1.9.0
 	fi
 }
@@ -108,7 +106,6 @@ function build_mysql ()
 	docker build -t my-${svc} \
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg MYSQL_VERSION=${MYSQL_VERSION} \
-	--build-arg NGINX_VERSION=${NGINX_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
@@ -156,8 +153,6 @@ function build_grafana ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg GRAFANA_VERSION=${GRAFANA_VERSION} \
-	--build-arg	FTPS_USER=${FTPS_USER} \
-	--build-arg	FTPS_PASS=${FTPS_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -168,10 +163,6 @@ function build_influxdb ()
 	--build-arg ALPINE_VERSION=${ALPINE_VERSION} \
 	--build-arg OPENRC_VERSION=${OPENRC_VERSION} \
 	--build-arg INFLUXDB_VERSION=${INFLUXDB_VERSION} \
-	--build-arg INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER} \
-	--build-arg INFLUXDB_ADMIN_PASS=${INFLUXDB_ADMIN_PASS} \
-	--build-arg INFLUXDB_USER=${INFLUXDB_USER} \
-	--build-arg INFLUXDB_PASS=${INFLUXDB_PASS} \
 	-f ${srcs}/${svc}/Dockerfile ${srcs}/${svc}
 }
 
@@ -187,19 +178,34 @@ function build_telegraf ()
 
 function build_containers ()
 {
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_nginx;
-	#for service in services "${services[@]}"
-	#do
-		#echo "building ${services[@]}\n"
-		#docker build -t ${service[@]} -f ${srcs}/${service[@]}/Dockerfile ${srcs}/${service[@]}
-	#done
+	echo 'Building containers, building logs located in \'build_log.log\' file;
+	echo 'Building MYSQL';
+	echo 'MYSQL log' > build_log.log;
+	build_mysql >> build_log.log;
+	echo 'Building WORDPRESS';
+	echo 'WORDPRESS log' >> build_log.log;
+	build_wordpress >> build_log.log;
+	echo 'Building PHPMYADMIN';
+	echo 'PHPMYADMIN log' >> build_log.log;
+	build_phpmyadmin >> build_log.log;
+	echo 'Building NGINX';
+	echo 'NGINX log' >> build_log.log;
+	build_nginx >> build_log.log;
+	echo 'Building FTPS';
+	echo 'FTPS log' >> build_log.log;
+	build_ftps >> build_log.log;
+	echo 'Building INFLUXDB';
+	echo 'INFLUXDB log' >> build_log.log;
+	build_influxdb >> build_log.log;
+	echo 'Building TELEGRAF';
+	echo 'TELEGRAF log' >> build_log.log;
+	build_telegraf >> build_log.log;
+	echo 'Building GRAFANA';
+	echo 'GRAFANA log' >> build_log.log;
+	build_grafana >> build_log.log;
+	echo 'All containers built';
+	grep "Successfully tagged" build_log.log;
 }
-
-
-# DATABASE USERS INFO
 
 function run_mysql ()
 {
@@ -315,25 +321,18 @@ function run_containers ()
 	run_wordpress;
 	run_nginx;
 	run_phpmyadmin;
-	#docker run --network=${NETWORK_NAME} --ip ${MYSQL_IP} -p 3306:3306 -d -t mysql
-	#docker run --network=${NETWORK_NAME} -p 3306:3306 -d -t mysql
-	#docker network connect --alias db --alias mysql ${NETWORK_NAME} mysql:latest
-	#docker run --network=${NETWORK_NAME} -p 5050:5050 -d -t  wordpress
-	#docker run --network=${NETWORK_NAME} -p 5000:5000 -d -t  phpmyadmin
-	#docker network connect ${NETWORK_NAME} nginx:latest
-	#docker network connect cluster wordpress:latest
-	#docker network connect cluster phpmyadmin:latest
+	run_ftps;
+	run_influxdb;
+	run_telegraf;
+	run_grafana;
 }
 
 function apply_metal_LB ()
 {
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/namespace.yaml
 	kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.6/manifests/metallb.yaml
-	# On first install only
 	kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 	kubectl apply -f "$srcs/config.yaml"
-	# kubectl apply -f "$srcs/metallb.yaml"
-	# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 }
 
 function apply_kub ()
@@ -341,113 +340,78 @@ function apply_kub ()
 	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
 	sleep 2;
 	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
-	sleep 2;
 	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
-	sleep 2;
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
+	kubectl apply -f "${srcs}/${services[4]}/${services[4]}.yaml"
+	kubectl apply -f "${srcs}/${services[5]}/${services[5]}.yaml"
+	kubectl apply -f "${srcs}/${services[6]}/${services[6]}.yaml"
+	kubectl apply -f "${srcs}/${services[7]}/${services[7]}.yaml"
+}
+
+function print_user_info ()
+{
+	echo "WORDPRESS accounts:";
+	echo "  - ${WP_ADMIN}:${WP_ADMIN_PASS}";
+	echo "  - ${DB_USER}:${DB_PASS}";
+	echo "PHPMYADMIN accounts:";
+	echo "  - ${WP_ADMIN}:${WP_ADMIN_PASS}";
+	echo "  - ${DB_USER}:${DB_PASS}";
+	echo "FTPS account:";
+	echo "  - ${FTPS_USER}:${FTPS_PASS}";
+	echo "GRAFFNA accounts:";
+	echo "  - ${INFLUXDB_USER}:${INFLUXDB_PASS}";
+	echo "  - ${INFLUXDB_ADMIN_USER}:${INFLUXDB_ADMIN_PASS}";
+}
+
+function kill_docker ()
+{
+	# docker kill $(docker ps -q);
+	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
+	# docker network rm ${NETWORK_NAME}
+	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	echo ok
+}
+
+function check_VM_settings ()
+{
+	echo "-----------------------------------------------------------------------\n"
+	echo "			Welcome to Ft_Services\n"
+	echo "-----------------------------------------------------------------------\n"
+	echo "WARNING : you need to run this project on 42VM AND :"
+	echo "-Your VM need at least 2 CPU's to run Minikube"
+	echo "-Your VM need to give sudo rights to Docker to run it properly"
+	echo "-Nginx service is not running"
+	echo "if you don't fullfil theses 3 requierements :"
+	echo "1- Select \"No\""
+	echo "2- Give sudo rights to Docker: sudo usermod -aG docker $(whoami)"
+	echo "3- Exit the VM"
+	echo "4- Set 2 CPU for the VM"
+	echo "5- Restart the VM to apply changes and then relaunch setup.sh"
+	echo "6- Stop nginx service"
+	echo "-----------------------------------------------------------------------"
+	echo "Do you fulfil theses requierments ?"
 }
 
 function main ()
 {
-	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
-	docker network rm ${NETWORK_NAME}
-	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	# check_minikube;
+	check_VM_settings;
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes ) ;;
+			No ) exit;;
+		esac
+	check_minikube;
 	launch_minikube;
-	echo "adding minikube docker env\n"
-	eval $(minikube -p minikube docker-env)
 	apply_metal_LB;
-	# build_containers;
-	build_mysql;
-	build_wordpress;
-	build_phpmyadmin;
-	build_nginx;
-	# build_ftps;
-	# build_grafana;
-	# build_influxdb;
-	# build_telegraf;
-	# run_influxdb;
-	# run_telegraf;
-	# run_grafana;
-	# run_ftps;
-	# run_mysql;
-	# run_nginx;
-	# run_phpmyadmin;
-	# run_wordpress;
+	build_containers;
 	#run_containers;
 	apply_kub;
+	echo 'installing filezilla to test ftps server'
+	sudo apt install filezilla;
+	print_user_info;
 	minikube dashboard;
-	# echo start
+	exit;
+	done
 }
 
 main;
-exit;
-
-#--------------------------- Checking dependences------------------------------#
-
-function VM_settings ()
-{
-echo "-----------------------------------------------------------------------\n"
-echo "			Welcome to Ft_Services\n"
-echo "-----------------------------------------------------------------------\n"
-echo "WARNING : you need to run this project on 42VM AND :\n"
-echo "-Your VM need at least 2 CPU's to run Minikube\n"
-echo "-Your VM need to give sudo rights to Docker to run it properly\n"
-echo "if you don't fullfil theses 2 requierements :"
-echo "1- Select \"No\""
-echo "2- Give sudo rights to Docker: sudo usermod -aG docker \$(whoami)"
-echo "3- Exit the VM"
-echo "4- Set 2 CPU for the VM"
-echo "5- Restart the VM to apply changes and then relaunch setup.sh\n"
-echo "-----------------------------------------------------------------------\n"
-echo "Do you fulfil theses requierments ?\n"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) main;;
-        No ) exit;;
-    esac
-done
-}
-
-
-#--------------------------- Building contenairs ------------------------------#
-# if minikube is no running, start minikube
-#if ! minikube status > /dev/null 2>&1
-	#then
-		#minikube start --driver=docker --cpus=2
-		#minikube addons enable metallb
-		#minikube addons enable metrics-server
-		#minikube addons enable dashboard
-#fi
-
-## add minikube env variables
-#echo "adding minikube docker env\n"
-#eval $(minikube -p minikube docker-env)
-#minikube addons configure metallb eval $(minikube docker-env)
-
-# How to install metallb => https://metallb.universe.tf/installation/
-# enable strict ARP mode to use kube-proxy
-# 1- see what changes would be made, returns nonzero returncode if different
-#kubectl get configmap kube-proxy -n kube-system -o yaml | \
-#sed -e "s/strictARP: false/strictARP: true/" | \
-#kubectl diff -f - -n kube-system
-# 2- actually apply the changes, returns nonzero returncode on errors only
-#kubectl get configmap kube-proxy -n kube-system -o yaml | \
-#sed -e "s/strictARP: false/strictARP: true/" | \
-#kubectl apply -f - -n kube-system
-
-# templates for metallb v0.9.3 download at :
-# https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/namespace.yaml
-# https://raw.githubusercontent.com/metallb/metallb/v0.9.3/manifests/metallb.yaml
-#kubectl apply -f "$srcs/config.yaml"
-#kubectl apply -f "$srcs/metallb.yaml"
-# On first install only
-
-
-#for service in services "${services[@]}"
-#docker build -t "$USER-nginx" -f "$srcs/nginx/Dockerfile" srcs/nginx
-#kubectl apply -f srcs/nginx/nginx.yaml
-#kubectl apply -f srcs/nginx/nginx.yaml
-
-

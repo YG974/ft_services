@@ -28,6 +28,8 @@ RUN openssl req -x509 \
 
 COPY	entrypoint.sh \
 		vsftpd.conf \
+		livenessprobe.sh \
+		success.txt \
 		./
 
 # copy vsftpd setting file in etc
@@ -35,6 +37,7 @@ RUN		mv vsftpd.conf /etc/vsftpd/vsftpd.conf
 
 # create user, neceserary to login ftps
 RUN		echo -e "$FTPS_PASS\n$FTPS_PASS" | adduser $FTPS_USER
+RUN		mv success.txt /home/${FTPS_USER}/success.txt
 
 # port 21 = command port
 # port 20 = data transfer port for active mode
@@ -44,6 +47,7 @@ EXPOSE	21 20 21000-21004
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
 CMD		["./entrypoint.sh"]
 # ENTRYPOINT		["./entrypoint.sh"]

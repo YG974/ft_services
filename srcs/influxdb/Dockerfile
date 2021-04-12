@@ -5,19 +5,17 @@ FROM	alpine:$ALPINE_VERSION
 
 LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
 
-#ARG		MYSQL_VERSION=10.4.17-r1
-#ARG		OPENRC_VERSION=0.42.1-r2
-#ARG		NGINX_VERSION=1.16.1-r6
 ARG		OPENRC_VERSION
 ARG		INFLUXDB_VERSION
 ARG		REPOS='/etc/apk/repositories'
 
 WORKDIR	/
 
-
+# update apk repos to be able to find influxdb
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
 RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
 
+# Install sofwares
 RUN		apk add --update --no-cache \
 		openrc=${OPENRC_VERSION} \
 		influxdb=${INFLUXDB_VERSION}
@@ -26,15 +24,16 @@ RUN		apk add --update --no-cache \
 RUN		openrc && \
 		touch /run/openrc/softlevel
 
+# copy files from context/OS to container
 COPY	entrypoint.sh \
+		livenessprobe.sh \
 		./
 
 EXPOSE	8086
 
 # Adding right to scripts
 RUN		chmod +x ./entrypoint.sh
+RUN		chmod +x ./livenessprobe.sh
 
-#starting NGINX
-CMD		["./entrypoint.sh"]
-#ENTRYPOINT ["ash"]
-# mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+# CMD		["./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]

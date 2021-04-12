@@ -81,6 +81,9 @@ function check_minikube ()
 		echo good version
 	else
 		echo bad
+		# curl -Lo minikube https://storage.googleapis.com/minikube/releases/1.9.0/minikube-linux-amd64   && chmod +x minikube
+		# sudo mkdir -p /usr/local/bin/
+# sudo install minikube /usr/local/bin/
 		#sudo apt delete minikube
 		#sudo apt install minikube=1.9.0
 	fi

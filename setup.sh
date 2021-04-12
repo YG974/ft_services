@@ -68,7 +68,8 @@ minikube start --driver='docker'
 #minikube addons enable metallb
 minikube addons enable metrics-server
 minikube addons enable dashboard
-## add minikube env variables
+echo 'adding docker env'
+eval $(minikube -p minikube docker-env)
 }
 
 function check_minikube ()
@@ -338,7 +339,6 @@ function apply_metal_LB ()
 function apply_kub ()
 {
 	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
-	sleep 2;
 	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
 	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
 	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
@@ -365,11 +365,10 @@ function print_user_info ()
 
 function kill_docker ()
 {
-	# docker kill $(docker ps -q);
+	docker kill $(docker ps -q);
 	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	# docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
-	echo ok
 }
 
 function check_VM_settings ()

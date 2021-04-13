@@ -1,5 +1,3 @@
 #!/bin/ash
 
-mysql << EOF
-SHOW DATABASES;
-EOF
+service mariadb status

@@ -11,23 +11,23 @@ Digest: sha256:bf5fa774f08a9ed2cb301e522b769d43d48124315a4ec50eae3228d03b9dc558
 Status: Downloaded newer image for alpine:3.11
  ---> 44dc5a8658dc
 Step 3/12 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
- ---> Running in 5ab89a685def
-Removing intermediate container 5ab89a685def
- ---> b4343c55c0d2
+ ---> Running in 685b883b92e6
+Removing intermediate container 685b883b92e6
+ ---> b3d278e1d801
 Step 4/12 : ARG		MYSQL_VERSION
- ---> Running in 96bd83712d2e
-Removing intermediate container 96bd83712d2e
- ---> 0dead1938f89
+ ---> Running in b9899ab1f5e2
+Removing intermediate container b9899ab1f5e2
+ ---> dbae0a835a6f
 Step 5/12 : ARG		OPENRC_VERSION
- ---> Running in 80a8fa56f0c9
-Removing intermediate container 80a8fa56f0c9
- ---> a9162b1b1b7c
+ ---> Running in 60c24683ad88
+Removing intermediate container 60c24683ad88
+ ---> 96396809dbc8
 Step 6/12 : WORKDIR	/
- ---> Running in b8a4e703af19
-Removing intermediate container b8a4e703af19
- ---> 7fb7dd8058fc
+ ---> Running in 52e8894aa9c9
+Removing intermediate container 52e8894aa9c9
+ ---> 90b0b3b325e6
 Step 7/12 : RUN		apk add --update --no-cache 		openrc=${OPENRC_VERSION} 		mysql=${MYSQL_VERSION} 		mysql-client=${MYSQL_VERSION}
- ---> Running in f287247d30bc
+ ---> Running in 3fad1a7be618
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
 (1/16) Installing mariadb-common (10.4.17-r1)
@@ -50,27 +50,27 @@ Executing openrc-0.42.1-r2.post-install
 (16/16) Installing mariadb-openrc (10.4.17-r1)
 Executing busybox-1.31.1-r10.trigger
 OK: 168 MiB in 30 packages
-Removing intermediate container f287247d30bc
- ---> ef858e31a18d
+Removing intermediate container 3fad1a7be618
+ ---> 9f9019125999
 Step 8/12 : COPY	entrypoint.sh 		livenessprobe.sh 		wordpress_db.sql 		./
- ---> 07d76c32224e
+ ---> ae02135810db
 Step 9/12 : EXPOSE	3306
- ---> Running in dcddbabf280e
-Removing intermediate container dcddbabf280e
- ---> 75b6f0533cc0
+ ---> Running in 992300020f42
+Removing intermediate container 992300020f42
+ ---> c84012515dcc
 Step 10/12 : RUN		chmod +x ./entrypoint.sh
- ---> Running in d2aa8dea2a90
-Removing intermediate container d2aa8dea2a90
- ---> 70f983c38caa
+ ---> Running in 9df0899f43ce
+Removing intermediate container 9df0899f43ce
+ ---> bca7b0d5538b
 Step 11/12 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in 2af9b074b34e
-Removing intermediate container 2af9b074b34e
- ---> 2ab828862fb9
+ ---> Running in 20f451e9958a
+Removing intermediate container 20f451e9958a
+ ---> 80d6c6812bd6
 Step 12/12 : ENTRYPOINT		["./entrypoint.sh"]
- ---> Running in 0d45a7f48b75
-Removing intermediate container 0d45a7f48b75
- ---> 98cd19875f73
-Successfully built 98cd19875f73
+ ---> Running in f5445b5f5c93
+Removing intermediate container f5445b5f5c93
+ ---> 540e17150d7b
+Successfully built 540e17150d7b
 Successfully tagged my-mysql:latest
 WORDPRESS log
 Sending build context to Docker daemon  8.192kB
@@ -79,33 +79,33 @@ Step 2/23 : FROM	alpine:$ALPINE_VERSION
  ---> 44dc5a8658dc
 Step 3/23 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
  ---> Using cache
- ---> b4343c55c0d2
+ ---> b3d278e1d801
 Step 4/23 : ARG		WP_VERSION
- ---> Running in 87c40d531bec
-Removing intermediate container 87c40d531bec
- ---> 64d4aba80049
+ ---> Running in 86d2af9b9838
+Removing intermediate container 86d2af9b9838
+ ---> 1a5de6dfa1f3
 Step 5/23 : ARG		PHP_VERSION
- ---> Running in 49bd883ae358
-Removing intermediate container 49bd883ae358
- ---> 0dce9f5c157b
+ ---> Running in 864eaa5314e3
+Removing intermediate container 864eaa5314e3
+ ---> 6bb3597d2053
 Step 6/23 : ARG		NGINX_VERSION
- ---> Running in bfe03238e005
-Removing intermediate container bfe03238e005
- ---> f926e9148fc6
+ ---> Running in 3679e80e5358
+Removing intermediate container 3679e80e5358
+ ---> 42f7d1ad3cb6
 Step 7/23 : ARG		OPENRC_VERSION
- ---> Running in 00e327d2fd8e
-Removing intermediate container 00e327d2fd8e
- ---> 8b200dc38f3e
+ ---> Running in 29bd783c8910
+Removing intermediate container 29bd783c8910
+ ---> b949ce4ab5e5
 Step 8/23 : ENV WP_CONF="/srv/wordpress/wp-config.php"
- ---> Running in c8f0f12aa4f3
-Removing intermediate container c8f0f12aa4f3
- ---> ce5c18a31d31
+ ---> Running in 82fe5c614b13
+Removing intermediate container 82fe5c614b13
+ ---> 87793fb4f84a
 Step 9/23 : WORKDIR	/
- ---> Running in 0342396a3b6e
-Removing intermediate container 0342396a3b6e
- ---> 807a99f0e2c0
+ ---> Running in d659c4f17982
+Removing intermediate container d659c4f17982
+ ---> e2c1306f6fc5
 Step 10/23 : RUN		apk add --update --no-cache 		nginx=${NGINX_VERSION} 		openrc=${OPENRC_VERSION} 		php7=${PHP_VERSION} 		php7-json=${PHP_VERSION} 		php7-fpm=${PHP_VERSION} 		php7-mysqli=${PHP_VERSION}
- ---> Running in cd8846fb2908
+ ---> Running in a5bb901d740f
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
 (1/17) Installing pcre (8.43-r1)
@@ -129,57 +129,57 @@ Executing openrc-0.42.1-r2.post-install
 (17/17) Installing php7-mysqli (7.3.22-r0)
 Executing busybox-1.31.1-r10.trigger
 OK: 22 MiB in 31 packages
-Removing intermediate container cd8846fb2908
- ---> 32aaa586c409
+Removing intermediate container a5bb901d740f
+ ---> cbec73755898
 Step 11/23 : COPY	entrypoint.sh 		livenessprobe.sh 		./
- ---> df2cf0cd403e
+ ---> 3e11e86101f8
 Step 12/23 : ADD		https://wordpress.org/wordpress-${WP_VERSION}.tar.gz .
 
 
- ---> 0ce2021a0686
+ ---> 2bf76699a55f
 Step 13/23 : RUN		tar xzf wordpress-${WP_VERSION}.tar.gz -C /srv/
- ---> Running in 9395bd64f9f1
-Removing intermediate container 9395bd64f9f1
- ---> 7c552aafb29a
+ ---> Running in 46fc261b86ba
+Removing intermediate container 46fc261b86ba
+ ---> 685b4121340f
 Step 14/23 : RUN		rm wordpress-${WP_VERSION}.tar.gz
- ---> Running in a844f85e6fa2
-Removing intermediate container a844f85e6fa2
- ---> 235653b16834
+ ---> Running in 838ed77bafb7
+Removing intermediate container 838ed77bafb7
+ ---> dd001b553a4e
 Step 15/23 : RUN		mv /srv/wordpress/wp-config-sample.php /srv/wordpress/wp-config.php
- ---> Running in fc9d1301ab1e
-Removing intermediate container fc9d1301ab1e
- ---> c8d422b7e086
+ ---> Running in fb297aabb216
+Removing intermediate container fb297aabb216
+ ---> b5df16a6aa12
 Step 16/23 : COPY 	localhost.conf 		./
- ---> 5a1513bfb581
+ ---> be7c55c992e0
 Step 17/23 : RUN		mkdir -p /run/nginx
- ---> Running in 1b012212079a
-Removing intermediate container 1b012212079a
- ---> 69c1f585c3c3
+ ---> Running in c988dbc7e936
+Removing intermediate container c988dbc7e936
+ ---> 80619737b17f
 Step 18/23 : RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
- ---> Running in 1911033444a8
-Removing intermediate container 1911033444a8
- ---> d5eb5870f537
+ ---> Running in f96d2e4e5397
+Removing intermediate container f96d2e4e5397
+ ---> 757e73ddf2a7
 Step 19/23 : RUN		rm /etc/nginx/conf.d/default.conf
- ---> Running in 0d2577f325ab
-Removing intermediate container 0d2577f325ab
- ---> 6a5b605e4a5f
+ ---> Running in cd3d7193631f
+Removing intermediate container cd3d7193631f
+ ---> 0f7163645b99
 Step 20/23 : EXPOSE	5050
- ---> Running in 60ff01b24014
-Removing intermediate container 60ff01b24014
- ---> a719d035c89a
+ ---> Running in ce43075d6e3a
+Removing intermediate container ce43075d6e3a
+ ---> 735813463148
 Step 21/23 : RUN		chmod +x ./entrypoint.sh
- ---> Running in 4e798eb294da
-Removing intermediate container 4e798eb294da
- ---> 29391c51a768
+ ---> Running in 728f4145df1f
+Removing intermediate container 728f4145df1f
+ ---> 846b7e7b43bc
 Step 22/23 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in c985bb756539
-Removing intermediate container c985bb756539
- ---> 03b04fe9216c
+ ---> Running in 4bb300a2c56c
+Removing intermediate container 4bb300a2c56c
+ ---> 268d92e790af
 Step 23/23 : ENTRYPOINT ["./entrypoint.sh"]
- ---> Running in 0518c812b22f
-Removing intermediate container 0518c812b22f
- ---> 77a79c3f7fdb
-Successfully built 77a79c3f7fdb
+ ---> Running in 687d3e3193d8
+Removing intermediate container 687d3e3193d8
+ ---> a8fb62c7d67b
+Successfully built a8fb62c7d67b
 Successfully tagged my-wordpress:latest
 PHPMYADMIN log
 Sending build context to Docker daemon  11.26kB
@@ -188,29 +188,29 @@ Step 2/18 : FROM	alpine:$ALPINE_VERSION
  ---> 44dc5a8658dc
 Step 3/18 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
  ---> Using cache
- ---> b4343c55c0d2
+ ---> b3d278e1d801
 Step 4/18 : ARG		PHP_VERSION
- ---> Running in 6a4ca9be3345
-Removing intermediate container 6a4ca9be3345
- ---> 97d3ee44f0fd
+ ---> Running in a31a0a701de0
+Removing intermediate container a31a0a701de0
+ ---> eddfb6282a41
 Step 5/18 : ARG		PMA_VERSION
- ---> Running in 19737f453af0
-Removing intermediate container 19737f453af0
- ---> 38d85bcbcf71
+ ---> Running in 9398b1cb5b40
+Removing intermediate container 9398b1cb5b40
+ ---> eeea4accf353
 Step 6/18 : ARG		NGINX_VERSION
- ---> Running in b627da46eaa4
-Removing intermediate container b627da46eaa4
- ---> 52a4c88bd0ec
+ ---> Running in 7008efaa60e2
+Removing intermediate container 7008efaa60e2
+ ---> b5959d4a4216
 Step 7/18 : ARG		OPENRC_VERSION
- ---> Running in 011c56e1982a
-Removing intermediate container 011c56e1982a
- ---> 4b6f11716bf8
+ ---> Running in f38d71d74cc8
+Removing intermediate container f38d71d74cc8
+ ---> 9ba174880d14
 Step 8/18 : WORKDIR	/
- ---> Running in c06cc223b8e8
-Removing intermediate container c06cc223b8e8
- ---> b5e8f7eb41fa
+ ---> Running in 21c3f207f3d7
+Removing intermediate container 21c3f207f3d7
+ ---> 29e3027f62ec
 Step 9/18 : RUN		apk add --update --no-cache 		openrc=${OPENRC_VERSION} 		phpmyadmin=${PMA_VERSION} 		php7-fpm=${PHP_VERSION} 		nginx=${NGINX_VERSION}
- ---> Running in 8b6188353bac
+ ---> Running in f8a032302618
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
 (1/45) Installing pcre (8.43-r1)
@@ -276,43 +276,43 @@ Executing phpmyadmin-4.9.5-r0.post-install
 [0mExecuting busybox-1.31.1-r10.trigger
 Executing ca-certificates-20191127-r2.trigger
 OK: 76 MiB in 59 packages
-Removing intermediate container 8b6188353bac
- ---> 40bad8b0eec5
+Removing intermediate container f8a032302618
+ ---> 933e71677fcf
 Step 10/18 : COPY	entrypoint.sh 		localhost.conf 		livenessprobe.sh 		config.inc.php 		./
- ---> 7f45c9209680
+ ---> c70e1f75eafe
 Step 11/18 : RUN		mkdir -p /run/nginx
- ---> Running in 5a8b5a6963cf
-Removing intermediate container 5a8b5a6963cf
- ---> 279f47b761cd
+ ---> Running in 530e6f780a70
+Removing intermediate container 530e6f780a70
+ ---> 8f96435bc917
 Step 12/18 : RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
- ---> Running in e420f11042bc
-Removing intermediate container e420f11042bc
- ---> 4fa81023c29b
+ ---> Running in 30ff7df31a30
+Removing intermediate container 30ff7df31a30
+ ---> 75d7007524b2
 Step 13/18 : RUN		rm /etc/nginx/conf.d/default.conf
- ---> Running in 1b221f422675
-Removing intermediate container 1b221f422675
- ---> f4a507694cd7
+ ---> Running in ff8cd8263036
+Removing intermediate container ff8cd8263036
+ ---> 2447d198eb77
 Step 14/18 : RUN 	mv ./config.inc.php /etc/phpmyadmin/config.inc.php
- ---> Running in 86091cfa3953
-Removing intermediate container 86091cfa3953
- ---> cf2a6d171482
+ ---> Running in 46875fcc5b85
+Removing intermediate container 46875fcc5b85
+ ---> 1f3d5bd056f0
 Step 15/18 : EXPOSE	5000
- ---> Running in 68696b53d12b
-Removing intermediate container 68696b53d12b
- ---> 7497133e42d4
+ ---> Running in caaa48aac765
+Removing intermediate container caaa48aac765
+ ---> 014a89c17925
 Step 16/18 : RUN		chmod +x ./entrypoint.sh
- ---> Running in a0ab6e5c4ffb
-Removing intermediate container a0ab6e5c4ffb
- ---> 362cbdd923bd
+ ---> Running in e206dcf41d45
+Removing intermediate container e206dcf41d45
+ ---> 445b472810d6
 Step 17/18 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in 9f0bce644247
-Removing intermediate container 9f0bce644247
- ---> 003151e338d2
+ ---> Running in c600ab4599f2
+Removing intermediate container c600ab4599f2
+ ---> c272c8042888
 Step 18/18 : ENTRYPOINT ["./entrypoint.sh"]
- ---> Running in 5d8ba0041ae2
-Removing intermediate container 5d8ba0041ae2
- ---> a474c8dcd6e7
-Successfully built a474c8dcd6e7
+ ---> Running in 80186397a515
+Removing intermediate container 80186397a515
+ ---> b15546596f01
+Successfully built b15546596f01
 Successfully tagged my-phpmyadmin:latest
 NGINX log
 Sending build context to Docker daemon  8.704kB
@@ -321,17 +321,17 @@ Step 2/16 : FROM	alpine:$ALPINE_VERSION
  ---> 44dc5a8658dc
 Step 3/16 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
  ---> Using cache
- ---> b4343c55c0d2
+ ---> b3d278e1d801
 Step 4/16 : ARG		NGINX_VERSION
- ---> Running in 79ec162d303a
-Removing intermediate container 79ec162d303a
- ---> bc78cf883574
+ ---> Running in 9d7186e7e556
+Removing intermediate container 9d7186e7e556
+ ---> 16bbddf0b262
 Step 5/16 : WORKDIR	/
- ---> Running in 33574799c8b2
-Removing intermediate container 33574799c8b2
- ---> 44454dd64959
+ ---> Running in f96c1915be32
+Removing intermediate container f96c1915be32
+ ---> 404cf1e680ad
 Step 6/16 : RUN		apk add --update --no-cache 		nginx=${NGINX_VERSION} 		openssl
- ---> Running in 104fa6bdcc6b
+ ---> Running in da377eddf8b2
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
 fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
 (1/3) Installing pcre (8.43-r1)
@@ -340,355 +340,51 @@ Executing nginx-1.16.1-r6.pre-install
 (3/3) Installing openssl (1.1.1k-r0)
 Executing busybox-1.31.1-r10.trigger
 OK: 8 MiB in 17 packages
-Removing intermediate container 104fa6bdcc6b
- ---> 9fd663402fee
+Removing intermediate container da377eddf8b2
+ ---> 772b79438019
 Step 7/16 : RUN		mkdir -p /run/nginx
- ---> Running in 6c8174d80d4d
-Removing intermediate container 6c8174d80d4d
- ---> 754f925dd604
+ ---> Running in 577c7bcf98c1
+Removing intermediate container 577c7bcf98c1
+ ---> 3f650a889070
 Step 8/16 : RUN openssl req -x509 			-nodes 			-days 365 			-newkey rsa:4096 			-keyout /etc/ssl/private/nginx-selfsigned.key 			-out /etc/ssl/certs/nginx-selfsigned.crt 			-subj "/C=FR/ST=Paris/L=Paris/O=42_School/OU=ygeslin/CN=ft_services"
- ---> Running in ca42f2fb4833
+ ---> Running in dbea18d03c9e
 [91mGenerating a RSA private key
-[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m+[0m[91m+[0m[91m+[0m[91m+
-[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m+[0m[91m+[0m[91m+[0m[91m+
+[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m+[0m[91m+[0m[91m+[0m[91m+
+[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m+[0m[91m+[0m[91m+[0m[91m+
 [0m[91mwriting new private key to '/etc/ssl/private/nginx-selfsigned.key'
 [0m[91m-----
-[0mRemoving intermediate container ca42f2fb4833
- ---> 6dda053bc92f
+[0mRemoving intermediate container dbea18d03c9e
+ ---> 6ed7b9b60a87
 Step 9/16 : COPY	entrypoint.sh 		livenessprobe.sh 		localhost.conf 		index.html 		./
- ---> 96fe42387b5a
+ ---> 73e3bb4bb8ed
 Step 10/16 : RUN		mv localhost.conf /etc/nginx/conf.d/localhost.conf
- ---> Running in bbc9298aa710
-Removing intermediate container bbc9298aa710
- ---> 7c3d0af0b0a3
+ ---> Running in 48b31f893d60
+Removing intermediate container 48b31f893d60
+ ---> 24866981fad2
 Step 11/16 : RUN		rm /etc/nginx/conf.d/default.conf
- ---> Running in eb1de0ea644a
-Removing intermediate container eb1de0ea644a
- ---> c9cd21e3b1eb
+ ---> Running in 736ef552f213
+Removing intermediate container 736ef552f213
+ ---> 7d66f7bf00a7
 Step 12/16 : RUN		mv index.html /var/www/localhost/
- ---> Running in 91819a43be44
-Removing intermediate container 91819a43be44
- ---> 39c6013fecc4
+ ---> Running in 40aad5dbdb16
+Removing intermediate container 40aad5dbdb16
+ ---> 18021893c516
 Step 13/16 : EXPOSE	80 443
- ---> Running in 76c79c218bed
-Removing intermediate container 76c79c218bed
- ---> 9dcbd83a3d0b
+ ---> Running in 3bdb8228ed19
+Removing intermediate container 3bdb8228ed19
+ ---> acf861cc10bf
 Step 14/16 : RUN		chmod +x ./entrypoint.sh
- ---> Running in adae7488e9f9
-Removing intermediate container adae7488e9f9
- ---> 58fac3fc3e85
+ ---> Running in e39fabec6652
+Removing intermediate container e39fabec6652
+ ---> 83558d479329
 Step 15/16 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in a3b3c886fb56
-Removing intermediate container a3b3c886fb56
- ---> a915c9218619
+ ---> Running in af42265c4215
+Removing intermediate container af42265c4215
+ ---> af5eb1a3f02a
 Step 16/16 : CMD		["./entrypoint.sh"]
- ---> Running in c26e0dbee4d1
-Removing intermediate container c26e0dbee4d1
- ---> f36c9151a616
-Successfully built f36c9151a616
+ ---> Running in 4bb421d108ac
+Removing intermediate container 4bb421d108ac
+ ---> 569d67e52244
+Successfully built 569d67e52244
 Successfully tagged my-nginx:latest
 FTPS log
-Sending build context to Docker daemon  9.728kB
-Step 1/18 : ARG		ALPINE_VERSION
-Step 2/18 : FROM	alpine:$ALPINE_VERSION
- ---> 44dc5a8658dc
-Step 3/18 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
- ---> Using cache
- ---> b4343c55c0d2
-Step 4/18 : ARG		VSFTPD_VERSION
- ---> Running in db31cc37dc03
-Removing intermediate container db31cc37dc03
- ---> 2d4222123e9a
-Step 5/18 : ARG		OPENRC_VERSION
- ---> Running in f533694ccb27
-Removing intermediate container f533694ccb27
- ---> ac6f5314b4a5
-Step 6/18 : ARG		FTPS_USER
- ---> Running in ffa0cb60bdf6
-Removing intermediate container ffa0cb60bdf6
- ---> 597887836195
-Step 7/18 : ARG		FTPS_PASS
- ---> Running in 2691dc701c96
-Removing intermediate container 2691dc701c96
- ---> 7537dcb4044e
-Step 8/18 : WORKDIR	/
- ---> Running in 97789c185c53
-Removing intermediate container 97789c185c53
- ---> abb1c8480374
-Step 9/18 : RUN		apk add vsftpd=${VSFTPD_VERSION} 		openrc=${OPENRC_VERSION} 		openssl
- ---> Running in 8696b315d22d
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
-(1/5) Installing openrc (0.42.1-r2)
-Executing openrc-0.42.1-r2.post-install
-(2/5) Installing openssl (1.1.1k-r0)
-(3/5) Installing libcap (2.27-r0)
-(4/5) Installing linux-pam (1.3.1-r1)
-(5/5) Installing vsftpd (3.0.3-r6)
-Executing vsftpd-3.0.3-r6.pre-install
-Executing busybox-1.31.1-r10.trigger
-OK: 10 MiB in 19 packages
-Removing intermediate container 8696b315d22d
- ---> e6969f15109b
-Step 10/18 : RUN openssl req -x509 			-nodes 			-days 365 			-newkey rsa:1024 			-keyout /etc/ssl/private/ftps-selfsigned.key 			-out /etc/ssl/certs/ftps-selfsigned.crt 			-subj "/C=FR/ST=Paris/L=Paris/O=42_School/OU=ygeslin/CN=localost"
- ---> Running in c7f6195c0f58
-[91mGenerating a RSA private key
-[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m.[0m[91m++[0m[91m+[0m[91m++
-...........+++++
-writing new private key to '/etc/ssl/private/ftps-selfsigned.key'
------
-[0mRemoving intermediate container c7f6195c0f58
- ---> 929ef015375a
-Step 11/18 : COPY	entrypoint.sh 		vsftpd.conf 		livenessprobe.sh 		success.txt 		./
- ---> 3518f794f3c4
-Step 12/18 : RUN		mv vsftpd.conf /etc/vsftpd/vsftpd.conf
- ---> Running in 2878597a1c81
-Removing intermediate container 2878597a1c81
- ---> 5d1ae87fc45c
-Step 13/18 : RUN		echo -e "$FTPS_PASS\n$FTPS_PASS" | adduser $FTPS_USER
- ---> Running in b00cdc9b8a4e
-Changing password for user
-New password: 
-Bad password: too short
-Retype password: 
-[91mpasswd: password for user changed by root
-[0mRemoving intermediate container b00cdc9b8a4e
- ---> 74da6aee29f3
-Step 14/18 : RUN		mv success.txt /home/${FTPS_USER}/success.txt
- ---> Running in 519728cac243
-Removing intermediate container 519728cac243
- ---> ebcc70982874
-Step 15/18 : EXPOSE	21 20 21000-21004
- ---> Running in 6425eb59ea7a
-Removing intermediate container 6425eb59ea7a
- ---> d39203da4d9e
-Step 16/18 : RUN		chmod +x ./entrypoint.sh
- ---> Running in 2d3d9ea50d3a
-Removing intermediate container 2d3d9ea50d3a
- ---> 87567e09cd34
-Step 17/18 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in b76532a8c2e6
-Removing intermediate container b76532a8c2e6
- ---> 628e0dfac29b
-Step 18/18 : CMD		["./entrypoint.sh"]
- ---> Running in 8bb65fc97394
-Removing intermediate container 8bb65fc97394
- ---> 40f2a6f7ad94
-Successfully built 40f2a6f7ad94
-Successfully tagged my-ftps:latest
-INFLUXDB log
-Sending build context to Docker daemon  6.656kB
-Step 1/16 : ARG		ALPINE_VERSION
-Step 2/16 : FROM	alpine:$ALPINE_VERSION
- ---> 44dc5a8658dc
-Step 3/16 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
- ---> Using cache
- ---> b4343c55c0d2
-Step 4/16 : ARG		OPENRC_VERSION
- ---> Running in fd62a9483025
-Removing intermediate container fd62a9483025
- ---> aebc1df3d1fc
-Step 5/16 : ARG		INFLUXDB_VERSION
- ---> Running in 70ae2b21136c
-Removing intermediate container 70ae2b21136c
- ---> c38419742163
-Step 6/16 : ARG		REPOS='/etc/apk/repositories'
- ---> Running in 1559834ab463
-Removing intermediate container 1559834ab463
- ---> 74eb20866ea7
-Step 7/16 : WORKDIR	/
- ---> Running in 64f875d9667a
-Removing intermediate container 64f875d9667a
- ---> b54d12910757
-Step 8/16 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
- ---> Running in bebe8b98db58
-Removing intermediate container bebe8b98db58
- ---> 21b2ae250883
-Step 9/16 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
- ---> Running in da22dd736b83
-Removing intermediate container da22dd736b83
- ---> 76334dc12eb8
-Step 10/16 : RUN		apk add --update --no-cache 		openrc=${OPENRC_VERSION} 		influxdb=${INFLUXDB_VERSION}
- ---> Running in 53bfe3740a63
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/community/x86_64/APKINDEX.tar.gz
-(1/3) Installing influxdb (1.7.7-r1)
-Executing influxdb-1.7.7-r1.pre-install
-(2/3) Installing openrc (0.42.1-r2)
-Executing openrc-0.42.1-r2.post-install
-(3/3) Installing influxdb-openrc (1.7.7-r1)
-Executing busybox-1.31.1-r10.trigger
-OK: 194 MiB in 17 packages
-Removing intermediate container 53bfe3740a63
- ---> 72e1ddade7d9
-Step 11/16 : RUN		openrc && 		touch /run/openrc/softlevel
- ---> Running in b56dc7a5c64e
- * Caching service dependencies ... [ ok ]
-[91mService `hwdrivers' needs non existent service `dev'
-[0mRemoving intermediate container b56dc7a5c64e
- ---> cdc00bc85999
-Step 12/16 : COPY	entrypoint.sh 		livenessprobe.sh 		./
- ---> 7cb79c074efd
-Step 13/16 : EXPOSE	8086
- ---> Running in f8e1d1260a71
-Removing intermediate container f8e1d1260a71
- ---> eba73d62f164
-Step 14/16 : RUN		chmod +x ./entrypoint.sh
- ---> Running in 5ac8df049c38
-Removing intermediate container 5ac8df049c38
- ---> a6db8cf104a9
-Step 15/16 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in 630257669c7f
-Removing intermediate container 630257669c7f
- ---> 55d3f516a905
-Step 16/16 : ENTRYPOINT ["./entrypoint.sh"]
- ---> Running in 6cfef50d57d6
-Removing intermediate container 6cfef50d57d6
- ---> 744054b6a04a
-Successfully built 744054b6a04a
-Successfully tagged my-influxdb:latest
-TELEGRAF log
-Sending build context to Docker daemon   16.9kB
-Step 1/15 : ARG		ALPINE_VERSION
-Step 2/15 : FROM	alpine:$ALPINE_VERSION
- ---> 44dc5a8658dc
-Step 3/15 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
- ---> Using cache
- ---> b4343c55c0d2
-Step 4/15 : ARG		TELEGRAF_VERSION
- ---> Running in 82103a0a6ac8
-Removing intermediate container 82103a0a6ac8
- ---> 54928da6fb4c
-Step 5/15 : ARG		REPOS='/etc/apk/repositories'
- ---> Running in 8d2bd0234e23
-Removing intermediate container 8d2bd0234e23
- ---> 5a74b09b2b00
-Step 6/15 : WORKDIR	/
- ---> Running in 3a370a7c31db
-Removing intermediate container 3a370a7c31db
- ---> f9b3b03a0583
-Step 7/15 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
- ---> Running in 46b65343dc2d
-Removing intermediate container 46b65343dc2d
- ---> d6ff3aa420da
-Step 8/15 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
- ---> Running in f401445daf73
-Removing intermediate container f401445daf73
- ---> 5fd80eace3ee
-Step 9/15 : RUN		apk add --update --no-cache 		telegraf=${TELEGRAF_VERSION}
- ---> Running in d383c5b5180a
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/community/x86_64/APKINDEX.tar.gz
-(1/1) Installing telegraf (1.17.0-r0)
-Executing telegraf-1.17.0-r0.pre-install
-Executing busybox-1.31.1-r10.trigger
-OK: 95 MiB in 15 packages
-Removing intermediate container d383c5b5180a
- ---> bdb9143a66b3
-Step 10/15 : COPY	entrypoint.sh 		livenessprobe.sh 		telegraf.conf 		./
- ---> 1a78d7acd1ab
-Step 11/15 : RUN		mv telegraf.conf /etc/telegraf.conf
- ---> Running in 6088585c66c0
-Removing intermediate container 6088585c66c0
- ---> a80a9a211ed2
-Step 12/15 : EXPOSE	8125
- ---> Running in e650da441ee7
-Removing intermediate container e650da441ee7
- ---> a91b1d4f3b07
-Step 13/15 : RUN		chmod +x ./entrypoint.sh
- ---> Running in 1736ead43091
-Removing intermediate container 1736ead43091
- ---> b1068f356814
-Step 14/15 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in 686839c6392b
-Removing intermediate container 686839c6392b
- ---> f800a0935961
-Step 15/15 : ENTRYPOINT ["./entrypoint.sh"]
- ---> Running in 2de471a43f28
-Removing intermediate container 2de471a43f28
- ---> b6a55f598bfd
-[Warning] One or more build-args [OPENRC_VERSION] were not consumed
-Successfully built b6a55f598bfd
-Successfully tagged my-telegraf:latest
-GRAFANA log
-Sending build context to Docker daemon  116.2kB
-Step 1/18 : ARG		ALPINE_VERSION
-Step 2/18 : FROM	alpine:$ALPINE_VERSION
- ---> 44dc5a8658dc
-Step 3/18 : LABEL	MAINTAINER="ygeslin <ygeslin@student.42.fr>"
- ---> Using cache
- ---> b4343c55c0d2
-Step 4/18 : ARG		OPENRC_VERSION
- ---> Using cache
- ---> aebc1df3d1fc
-Step 5/18 : ARG		GRAFANA_VERSION
- ---> Running in 00d49343050e
-Removing intermediate container 00d49343050e
- ---> 1c063ca83a59
-Step 6/18 : ARG		REPOS='/etc/apk/repositories'
- ---> Running in d6cb3ef1a3fe
-Removing intermediate container d6cb3ef1a3fe
- ---> 088ca3174f77
-Step 7/18 : WORKDIR	/
- ---> Running in 5db034bddcf9
-Removing intermediate container 5db034bddcf9
- ---> a44575e2da02
-Step 8/18 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/main' >> ${REPOS}
- ---> Running in cc493c341b3e
-Removing intermediate container cc493c341b3e
- ---> 8f4e02b17826
-Step 9/18 : RUN		echo 'http://dl-cdn.alpinelinux.org/alpine/v3.13/community' >> ${REPOS}
- ---> Running in 7142f62d3687
-Removing intermediate container 7142f62d3687
- ---> 749c056efe1e
-Step 10/18 : RUN		apk add --update --no-cache 		openrc=${OPENRC_VERSION} 		grafana=${GRAFANA_VERSION}
- ---> Running in dc15d5b21369
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.11/community/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/main/x86_64/APKINDEX.tar.gz
-fetch http://dl-cdn.alpinelinux.org/alpine/v3.13/community/x86_64/APKINDEX.tar.gz
-(1/3) Installing grafana (7.3.6-r0)
-Executing grafana-7.3.6-r0.pre-install
-(2/3) Installing openrc (0.42.1-r2)
-Executing openrc-0.42.1-r2.post-install
-(3/3) Installing grafana-openrc (7.3.6-r0)
-Executing busybox-1.31.1-r10.trigger
-OK: 173 MiB in 17 packages
-Removing intermediate container dc15d5b21369
- ---> 77c1ed39c0d1
-Step 11/18 : COPY	entrypoint.sh 		livenessprobe.sh 		datasources.yaml 		dashboard_provider.yaml 		dashboard.json 		./
- ---> b3362360bf75
-Step 12/18 : RUN		mv ./datasources.yaml 			/usr/share/grafana/conf/provisioning/datasources/.
- ---> Running in 2eb34fbc5372
-Removing intermediate container 2eb34fbc5372
- ---> c3957d378e88
-Step 13/18 : RUN		mv ./dashboard_provider.yaml 			/usr/share/grafana/conf/provisioning/dashboards/.
- ---> Running in 571802db7081
-Removing intermediate container 571802db7081
- ---> 819b87315e46
-Step 14/18 : RUN		mv ./dashboard.json 			/usr/share/grafana/conf/provisioning/dashboards/.
- ---> Running in bc273fa9bf28
-Removing intermediate container bc273fa9bf28
- ---> 113f2b289465
-Step 15/18 : EXPOSE	3000
- ---> Running in 12043e7543a1
-Removing intermediate container 12043e7543a1
- ---> 7a0e5c5664a1
-Step 16/18 : RUN		chmod +x ./entrypoint.sh
- ---> Running in 308f30c37d29
-Removing intermediate container 308f30c37d29
- ---> 64ffc7e336b2
-Step 17/18 : RUN		chmod +x ./livenessprobe.sh
- ---> Running in 4309e7c57ae6
-Removing intermediate container 4309e7c57ae6
- ---> 503b8e762a66
-Step 18/18 : ENTRYPOINT		["./entrypoint.sh"]
- ---> Running in 1475ef8dadd8
-Removing intermediate container 1475ef8dadd8
- ---> 4b4684e79518
-Successfully built 4b4684e79518
-Successfully tagged my-grafana:latest

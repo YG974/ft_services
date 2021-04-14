@@ -63,7 +63,7 @@ function launch_minikube ()
 	echo "launch Minikube\n";
 # deleting previous clusters
 minikube delete > /dev/null 2>&1
-minikube start --driver='docker' 
+minikube start --driver='docker' --cpus=12 
 # minikube start --cpus=12
 #minikube addons enable metallb
 minikube addons enable metrics-server
@@ -179,7 +179,7 @@ function build_telegraf ()
 
 function build_containers ()
 {
-	echo 'Building containers, building logs located in \'build_log.log\' file;
+	echo 'Building containers, building logs located in "build_log.log" file';
 	echo 'Building MYSQL';
 	echo 'MYSQL log' > build_log.log;
 	build_mysql >> build_log.log;
@@ -194,18 +194,18 @@ function build_containers ()
 	build_nginx >> build_log.log;
 	echo 'Building FTPS';
 	echo 'FTPS log' >> build_log.log;
-	build_ftps >> build_log.log;
-	echo 'Building INFLUXDB';
-	echo 'INFLUXDB log' >> build_log.log;
-	build_influxdb >> build_log.log;
-	echo 'Building TELEGRAF';
-	echo 'TELEGRAF log' >> build_log.log;
-	build_telegraf >> build_log.log;
-	echo 'Building GRAFANA';
-	echo 'GRAFANA log' >> build_log.log;
-	build_grafana >> build_log.log;
-	echo 'All containers built';
-	grep "Successfully tagged" build_log.log;
+	# build_ftps >> build_log.log;
+	# echo 'Building INFLUXDB';
+	# echo 'INFLUXDB log' >> build_log.log;
+	# build_influxdb >> build_log.log;
+	# echo 'Building TELEGRAF';
+	# echo 'TELEGRAF log' >> build_log.log;
+	# build_telegraf >> build_log.log;
+	# echo 'Building GRAFANA';
+	# echo 'GRAFANA log' >> build_log.log;
+	# build_grafana >> build_log.log;
+	# echo 'All containers built';
+	# grep "Successfully tagged" build_log.log;
 }
 
 function run_mysql ()
@@ -338,10 +338,10 @@ function apply_metal_LB ()
 
 function apply_kub ()
 {
-	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
-	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
-	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
-	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
+	# kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	# kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
+	# kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	# kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 	kubectl apply -f "${srcs}/${services[4]}/${services[4]}.yaml"
 	kubectl apply -f "${srcs}/${services[5]}/${services[5]}.yaml"
 	kubectl apply -f "${srcs}/${services[6]}/${services[6]}.yaml"
@@ -393,12 +393,12 @@ function check_VM_settings ()
 
 function main ()
 {
-	check_VM_settings;
-	select yn in "Yes" "No"; do
-		case $yn in
-			Yes ) ;;
-			No ) exit;;
-		esac
+	# check_VM_settings;
+	# select yn in "Yes" "No"; do
+	# 	case $yn in
+	# 		Yes ) ;;
+	# 		No ) exit;;
+	# 	esac
 	check_minikube;
 	launch_minikube;
 	apply_metal_LB;
@@ -406,11 +406,11 @@ function main ()
 	#run_containers;
 	apply_kub;
 	echo 'installing filezilla to test ftps server'
-	sudo apt install filezilla;
+	# sudo apt install filezilla;
 	print_user_info;
 	minikube dashboard;
 	exit;
-	done
+	# done
 }
 
 main;

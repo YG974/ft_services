@@ -30,9 +30,9 @@ OPENSSL_VERSION="";
 
 # NETWORK
 NETWORK_NAME="cluster";
-# MYSQL_IP="172.18.0.2";
+MYSQL_IP="172.18.0.2";
 # test kub metal lb ip
-MYSQL_IP="172.17.0.2";
+# MYSQL_IP="172.17.0.2";
 WP_IP="172.18.0.3";
 PMA_IP="172.18.0.4";
 NGINX_IP="172.18.0.5";
@@ -322,10 +322,10 @@ function run_containers ()
 	run_wordpress;
 	run_nginx;
 	run_phpmyadmin;
-	run_ftps;
-	run_influxdb;
-	run_telegraf;
-	run_grafana;
+	# run_ftps;
+	# run_influxdb;
+	# run_telegraf;
+	# run_grafana;
 }
 
 function apply_metal_LB ()
@@ -366,9 +366,9 @@ function print_user_info ()
 function kill_docker ()
 {
 	docker kill $(docker ps -q);
-	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
-	# docker network rm ${NETWORK_NAME}
-	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
+	docker network rm ${NETWORK_NAME}
+	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 }
 
 function check_VM_settings ()
@@ -399,16 +399,17 @@ function main ()
 	# 		Yes ) ;;
 	# 		No ) exit;;
 	# 	esac
-	check_minikube;
-	launch_minikube;
-	apply_metal_LB;
+	# check_minikube;
+	# launch_minikube;
+	# apply_metal_LB;
+	kill_docker;
 	build_containers;
-	#run_containers;
-	apply_kub;
-	echo 'installing filezilla to test ftps server'
+	run_containers;
+	# apply_kub;
+	# echo 'installing filezilla to test ftps server'
 	# sudo apt install filezilla;
 	print_user_info;
-	minikube dashboard;
+	# minikube dashboard;
 	exit;
 	# done
 }

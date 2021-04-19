@@ -368,7 +368,7 @@ function kill_docker ()
 	docker kill $(docker ps -q);
 	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
 	docker network rm ${NETWORK_NAME}
-	docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
+	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 }
 
 function check_VM_settings ()

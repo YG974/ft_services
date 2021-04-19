@@ -338,10 +338,10 @@ function apply_metal_LB ()
 
 function apply_kub ()
 {
-	# kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
-	# kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
-	# kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
-	# kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
+	kubectl apply -f "${srcs}/${services[0]}/${services[0]}.yaml"
+	kubectl apply -f "${srcs}/${services[1]}/${services[1]}.yaml"
+	kubectl apply -f "${srcs}/${services[2]}/${services[2]}.yaml"
+	kubectl apply -f "${srcs}/${services[3]}/${services[3]}.yaml"
 	kubectl apply -f "${srcs}/${services[4]}/${services[4]}.yaml"
 	kubectl apply -f "${srcs}/${services[5]}/${services[5]}.yaml"
 	kubectl apply -f "${srcs}/${services[6]}/${services[6]}.yaml"
@@ -399,17 +399,17 @@ function main ()
 	# 		Yes ) ;;
 	# 		No ) exit;;
 	# 	esac
-	# check_minikube;
-	# launch_minikube;
-	# apply_metal_LB;
+	check_minikube;
+	launch_minikube;
+	apply_metal_LB;
 	kill_docker;
 	build_containers;
-	run_containers;
-	# apply_kub;
+	# run_containers;
+	apply_kub;
 	# echo 'installing filezilla to test ftps server'
 	# sudo apt install filezilla;
 	print_user_info;
-	# minikube dashboard;
+	minikube dashboard;
 	exit;
 	# done
 }

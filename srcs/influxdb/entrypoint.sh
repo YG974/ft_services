@@ -2,7 +2,7 @@
 
 # INFLUXDB
 
-service influxdb start
+service influxdb restart
 #influxd -config /etc/influxdb.conf
 sleep 1;
 influx  << EOF

@@ -37,10 +37,10 @@ $cfg['Servers'][$i]['AllowNoPassword'] = true;
  */
 
 /* User used to manipulate with storage */
-$cfg['Servers'][$i]['controlhost'] = '172.17.0.2';
-$cfg['Servers'][$i]['controlport'] = '5000';
-$cfg['Servers'][$i]['controluser'] = 'user';
-$cfg['Servers'][$i]['controlpass'] = 'user';
+// $cfg['Servers'][$i]['controlhost'] = '172.17.0.2';
+// $cfg['Servers'][$i]['controlport'] = '5000';
+// $cfg['Servers'][$i]['controluser'] = 'user';
+// $cfg['Servers'][$i]['controlpass'] = 'user';
 
 /* Storage database and tables */
 $cfg['Servers'][$i]['pmadb'] = 'phpmyadmin';

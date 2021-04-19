@@ -194,18 +194,18 @@ function build_containers ()
 	build_nginx >> build_log.log;
 	echo 'Building FTPS';
 	echo 'FTPS log' >> build_log.log;
-	# build_ftps >> build_log.log;
-	# echo 'Building INFLUXDB';
-	# echo 'INFLUXDB log' >> build_log.log;
-	# build_influxdb >> build_log.log;
-	# echo 'Building TELEGRAF';
-	# echo 'TELEGRAF log' >> build_log.log;
-	# build_telegraf >> build_log.log;
-	# echo 'Building GRAFANA';
-	# echo 'GRAFANA log' >> build_log.log;
-	# build_grafana >> build_log.log;
-	# echo 'All containers built';
-	# grep "Successfully tagged" build_log.log;
+	build_ftps >> build_log.log;
+	echo 'Building INFLUXDB';
+	echo 'INFLUXDB log' >> build_log.log;
+	build_influxdb >> build_log.log;
+	echo 'Building TELEGRAF';
+	echo 'TELEGRAF log' >> build_log.log;
+	build_telegraf >> build_log.log;
+	echo 'Building GRAFANA';
+	echo 'GRAFANA log' >> build_log.log;
+	build_grafana >> build_log.log;
+	echo 'All containers built';
+	grep "Successfully tagged" build_log.log;
 }
 
 function run_mysql ()

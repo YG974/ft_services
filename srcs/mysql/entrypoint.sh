@@ -11,6 +11,8 @@ sed -i 's/skip-networking/# skip-networking/g' /etc/my.cnf.d/mariadb-server.cnf
 
 service mariadb restart
 
+sleep 5
+
 mysql --user=root << EOF
 CREATE DATABASE IF NOT EXISTS $DB_NAME;
 CREATE USER "$DB_USER"@"%" IDENTIFIED BY "$DB_PASS";

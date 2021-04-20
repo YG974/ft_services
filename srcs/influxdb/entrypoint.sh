@@ -4,7 +4,7 @@
 
 service influxdb restart
 #influxd -config /etc/influxdb.conf
-sleep 1;
+sleep 5;
 influx  << EOF
 CREATE USER admin WITH PASSWORD '$INFLUXDB_ADMIN_PASS' WITH ALL PRIVILEGES;
 CREATE DATABASE telegraf;

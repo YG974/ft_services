@@ -62,14 +62,12 @@ function launch_minikube ()
 {
 	echo "launch Minikube\n";
 # deleting previous clusters
-minikube delete > /dev/null 2>&1
-minikube start #--driver='docker'# --cpus=12 
-# minikube start --cpus=12
-#minikube addons enable metallb
-minikube addons enable metrics-server
-minikube addons enable dashboard
-echo 'adding docker env'
-eval $(minikube -p minikube docker-env)
+minikube delete;
+minikube start; 
+minikube addons enable metrics-server;
+minikube addons enable dashboard;
+echo 'adding docker env';
+eval $(minikube -p minikube docker-env);
 }
 
 function check_minikube ()
@@ -83,12 +81,11 @@ function check_minikube ()
 	then
 		echo good version
 	else
-		echo bad
-		# curl -Lo minikube https://storage.googleapis.com/minikube/releases/1.9.0/minikube-linux-amd64   && chmod +x minikube
-		# sudo mkdir -p /usr/local/bin/
-# sudo install minikube /usr/local/bin/
-		#sudo apt delete minikube
-		#sudo apt install minikube=1.9.0
+		echo 'bad version of minikube, please install version 1.9 by running :'
+		echo 'curl -Lo minikube https://storage.googleapis.com/minikube/releases/1.9.0/minikube-linux-amd64   && chmod +x minikube'
+		echo 'sudo mkdir -p /usr/local/bin/'
+		echo 'sudo install minikube /usr/local/bin/'
+		exit;
 	fi
 }
 
@@ -366,8 +363,8 @@ function print_user_info ()
 function kill_docker ()
 {
 	docker kill $(docker ps -q);
-	docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
-	docker network rm ${NETWORK_NAME}
+	# docker rm wordpress mysql nginx phpmyadmin ftps grafana telegraf influxdb;
+	# docker network rm ${NETWORK_NAME}
 	# docker network create ${NETWORK_NAME} --subnet ${DOCKER_SUBNET}
 }
 
@@ -393,12 +390,12 @@ function check_VM_settings ()
 
 function main ()
 {
-	# check_VM_settings;
-	# select yn in "Yes" "No"; do
-	# 	case $yn in
-	# 		Yes ) ;;
-	# 		No ) exit;;
-	# 	esac
+	check_VM_settings;
+	select yn in "Yes" "No"; do
+		case $yn in
+			Yes ) ;;
+			No ) exit;;
+		esac
 	check_minikube;
 	launch_minikube;
 	apply_metal_LB;
@@ -406,12 +403,12 @@ function main ()
 	build_containers;
 	# run_containers;
 	apply_kub;
-	# echo 'installing filezilla to test ftps server'
-	# sudo apt install filezilla;
+	echo 'installing filezilla to test ftps server'
+	sudo apt install filezilla;
 	print_user_info;
 	minikube dashboard;
 	exit;
-	# done
+	done
 }
 
 main;
